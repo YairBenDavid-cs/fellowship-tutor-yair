@@ -10,6 +10,12 @@
         "Declare variables and explain Python's dynamic typing",
         "Distinguish between int, float, str, and bool",
         "Convert between types using int(), float(), str(), and bool()"
+      ],
+      "starterFiles": [
+        {
+          "path": "main.py",
+          "content": "# Lesson 1: Variables and Types\n# Python lets you store values in variables — no type declaration needed.\n\n# Here are a few examples to get you started:\nname = \"Alice\"   # str  — text\nage = 25          # int  — whole number\nheight = 1.68     # float — decimal number\nis_student = True # bool — True or False\n\n# TODO 1: Create your own str, int, float, and bool variables below.\n\n\n# TODO 2: Use print() to display each variable and its type.\n# Hint: type(value) tells you the type of any value.\n\n\n# TODO 3: Convert `age` to a float, and `height` to an int. Print both.\n"
+        }
       ]
     },
     {
@@ -19,6 +25,12 @@
         "Write conditional expressions using comparison and logical operators",
         "Branch program flow with if / elif / else",
         "Recognise truthiness rules for common Python values"
+      ],
+      "starterFiles": [
+        {
+          "path": "main.py",
+          "content": "# Lesson 2: Control Flow\n# Programs make decisions using if, elif, and else.\n\nscore = 72  # Change this value to test different branches\n\n# TODO 1: Write an if/elif/else block that prints:\n#   \"Excellent!\" if score >= 90\n#   \"Good job!\"  if score >= 70\n#   \"Keep going!\" otherwise\n\n\n# TODO 2: Add a check: if score is negative or above 100, print \"Invalid score!\"\n# Use a logical operator (and / or / not).\n\n\n# TODO 3: Try a \"truthy\" experiment.\n# Create a variable `name` set to an empty string \"\".\n# Print whether `name` is truthy or falsy using an if statement.\n"
+        }
       ]
     },
     {
@@ -28,6 +40,12 @@
         "Iterate over sequences with a for loop using range() and enumerate()",
         "Use a while loop with a correct exit condition",
         "Apply break and continue to control loop execution"
+      ],
+      "starterFiles": [
+        {
+          "path": "main.py",
+          "content": "# Lesson 3: Loops\n# Loops let you repeat code without copy-pasting.\n\nfruits = [\"apple\", \"banana\", \"cherry\", \"date\"]\n\n# TODO 1: Use a for loop to print each fruit in the list.\n\n\n# TODO 2: Use enumerate() to print each fruit WITH its index number.\n# Expected output:\n#   0: apple\n#   1: banana  ... etc.\n\n\n# TODO 3: Write a while loop that counts DOWN from 5 to 1, then prints \"Liftoff!\".\n\n\n# TODO 4: Loop through numbers 1-20 with range().\n#   Skip even numbers using `continue`.\n#   Stop completely if you hit a number divisible by 15 using `break`.\n"
+        }
       ]
     },
     {
@@ -37,6 +55,12 @@
         "Define functions with positional, keyword, and default arguments",
         "Return values and understand the difference between return and print",
         "Explain local vs enclosing vs global scope in plain language"
+      ],
+      "starterFiles": [
+        {
+          "path": "main.py",
+          "content": "# Lesson 4: Functions and Scope\n# Functions let you package reusable logic with a name.\n\n# TODO 1: Write a function `greet(name, greeting=\"Hello\")` that\n#   RETURNS the string: \"Hello, Alice!\" (using the arguments).\n#   Then call it twice: once with just a name, once with a custom greeting.\n\n\n# TODO 2: Write a function `celsius_to_fahrenheit(c)` that\n#   returns the converted temperature.\n#   Formula: (c * 9/5) + 32\n\n\n# TODO 3: Scope experiment.\n#   Create a variable `x = 10` at the module level.\n#   Inside a function, create a LOCAL variable also named `x = 99`.\n#   Print `x` inside the function and then outside — what do you see?\n\n\n# TODO 4: Write a function that calls another function.\n#   `square(n)` returns n * n.\n#   `sum_of_squares(a, b)` returns square(a) + square(b).\n"
+        }
       ]
     },
     {
@@ -46,6 +70,12 @@
         "Create and mutate lists and dictionaries",
         "Access items by index and by key, and iterate over both",
         "Write a basic list comprehension and explain when to prefer it over a for loop"
+      ],
+      "starterFiles": [
+        {
+          "path": "main.py",
+          "content": "# Lesson 5: Lists, Dicts, and Comprehensions\n# Python's two most useful data structures.\n\n# ── Lists ───────────────────────────────────────────────────────\nscores = [88, 72, 95, 60, 78]\n\n# TODO 1: Print the first and last score using index.\n# TODO 2: Append 85, then remove the score of 60.\n# TODO 3: Sort the list in descending order.\n\n\n# ── Dicts ───────────────────────────────────────────────────────\nstudent = {\n    \"name\": \"Alice\",\n    \"age\": 22,\n    \"grade\": \"A\"\n}\n\n# TODO 4: Print the student's name and grade.\n# TODO 5: Add a new key \"city\" with any city name.\n# TODO 6: Loop over the dict and print each key: value pair.\n\n\n# ── Comprehensions ──────────────────────────────────────────────\nnumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\n\n# TODO 7: Use a list comprehension to create a list of squares: [1, 4, 9, ...]\n\n# TODO 8: Use a list comprehension to filter only EVEN numbers from `numbers`.\n"
+        }
       ]
     }
   ]

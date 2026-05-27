@@ -1,10 +1,16 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
 
+export type StarterFile = {
+  path: string;
+  content: string;
+};
+
 export type Lesson = {
   id: string;
   title: string;
   outcomes: string[];
+  starterFiles?: StarterFile[];
 };
 
 export type Course = {

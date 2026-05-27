@@ -9,6 +9,16 @@
       "outcomes": [
         "Articulate why TypeScript is preferred over plain JavaScript at scale",
         "Explain how static types catch bugs before runtime and act as documentation"
+      ],
+      "starterFiles": [
+        {
+          "path": "example.js",
+          "content": "// This is plain JavaScript — no types.\n// Look at this function. Can you tell what `user` should look like?\n// What does it return? What if `user.age` is a string?\n\nfunction getGreeting(user) {\n  if (user.age >= 18) {\n    return \"Welcome, \" + user.name + \"!\";\n  }\n  return \"Sorry, \" + user.name + \", adults only.\";\n}\n\n// These all 'work' in JS but have different behavior:\nconsole.log(getGreeting({ name: \"Alice\", age: 25 }));    // Works fine\nconsole.log(getGreeting({ name: \"Bob\", age: \"25\" }));    // Hmm...\nconsole.log(getGreeting({ name: \"Charlie\" }));           // age is undefined\nconsole.log(getGreeting(\"Alice\"));                        // Crashes!\n\n// TODO: Study each call. What does each one actually do?\n// Then discuss with your tutor: what problem does TypeScript solve here?\n"
+        },
+        {
+          "path": "example.ts",
+          "content": "// The same function — now in TypeScript.\n// The types ARE the documentation.\n\ntype User = {\n  name: string;\n  age: number;\n};\n\nfunction getGreeting(user: User): string {\n  if (user.age >= 18) {\n    return `Welcome, ${user.name}!`;\n  }\n  return `Sorry, ${user.name}, adults only.`;\n}\n\n// TypeScript will now catch mistakes BEFORE you run the code:\nconsole.log(getGreeting({ name: \"Alice\", age: 25 }));    // ✅ Fine\n// getGreeting({ name: \"Bob\", age: \"25\" });               // ❌ TS error: age must be number\n// getGreeting({ name: \"Charlie\" });                      // ❌ TS error: missing age\n// getGreeting(\"Alice\");                                  // ❌ TS error: wrong type entirely\n\n// TODO: Uncomment each error line one at a time.\n// Read the error message — what does TypeScript tell you?\n"
+        }
       ]
     },
     {
@@ -18,6 +28,12 @@
         "Define primitive types, union types, and object types",
         "Write interfaces and type aliases for real domain models",
         "Use generics to write a simple generic function or type"
+      ],
+      "starterFiles": [
+        {
+          "path": "types.ts",
+          "content": "// Lesson 2: TypeScript Fundamentals\n\n// ── 1. Primitive types ────────────────────────────────────────\n// TODO: Annotate these variables with their types.\nlet username = \"Alice\";\nlet score = 42;\nlet isActive = true;\nlet nothing = null;\n\n\n// ── 2. Union types ────────────────────────────────────────────\n// A value that can be one of several types.\ntype Status = \"active\" | \"inactive\" | \"pending\";\n\n// TODO: Create a variable `userStatus` of type Status.\n// Try assigning a value that isn't in the union — what happens?\n\n\n// ── 3. Object types and interfaces ───────────────────────────\n// TODO: Define a `Product` interface with:\n//   - id: number\n//   - name: string\n//   - price: number\n//   - inStock: boolean\n//   - tags: string[]  (array of strings)\n\n\n// TODO: Create two Product objects using your interface.\n\n\n// ── 4. Type aliases ───────────────────────────────────────────\n// TODO: Create a type alias `Point` for { x: number; y: number }.\n// Then write a function `distance(a: Point, b: Point): number`\n// that returns the distance between two points.\n// Formula: Math.sqrt((b.x - a.x)**2 + (b.y - a.y)**2)\n\n\n// ── 5. Generics ───────────────────────────────────────────────\n// TODO: Write a generic function `first<T>(arr: T[]): T | undefined`\n// that returns the first element of any array.\n// It should work for number[], string[], Product[], etc.\n\n\n// Test your generic:\n// console.log(first([1, 2, 3]));          // should return 1\n// console.log(first([\"a\", \"b\", \"c\"]));    // should return \"a\"\n// console.log(first([]));                 // should return undefined\n"
+        }
       ]
     },
     {
@@ -27,6 +43,16 @@
         "Convert a small JavaScript module to TypeScript with proper typing",
         "Avoid any and write explicit return types",
         "Read and respond to TypeScript compiler errors confidently"
+      ],
+      "starterFiles": [
+        {
+          "path": "cart.js",
+          "content": "// This is a shopping cart module in plain JavaScript.\n// Your task: convert this entire file to TypeScript.\n// Rename it to cart.ts and add proper types throughout.\n// No `any` allowed!\n\nfunction createCart() {\n  let items = [];\n\n  return {\n    addItem(item) {\n      const existing = items.find(i => i.id === item.id);\n      if (existing) {\n        existing.quantity += item.quantity;\n      } else {\n        items.push({ ...item });\n      }\n    },\n\n    removeItem(id) {\n      items = items.filter(i => i.id !== id);\n    },\n\n    getTotal() {\n      return items.reduce((sum, item) => sum + item.price * item.quantity, 0);\n    },\n\n    getItems() {\n      return [...items];\n    },\n\n    clear() {\n      items = [];\n    }\n  };\n}\n\n// Usage (should still work after your TypeScript conversion):\nconst cart = createCart();\ncart.addItem({ id: 1, name: \"Apple\", price: 0.99, quantity: 3 });\ncart.addItem({ id: 2, name: \"Bread\", price: 2.49, quantity: 1 });\ncart.addItem({ id: 1, name: \"Apple\", price: 0.99, quantity: 2 }); // adds to existing\nconsole.log(cart.getItems());\nconsole.log(\"Total: $\" + cart.getTotal().toFixed(2));\n"
+        },
+        {
+          "path": "cart.ts",
+          "content": "// TODO: Convert cart.js to TypeScript here.\n// Steps:\n//   1. Define a CartItem type/interface\n//   2. Add parameter types to all function arguments\n//   3. Add return type annotations to all functions\n//   4. Make sure `items` array is properly typed\n//   5. No `any` allowed!\n\n// Start typing here...\n"
+        }
       ]
     },
     {
@@ -35,6 +61,16 @@
       "outcomes": [
         "Explain what problem React solves compared to direct DOM manipulation",
         "Explain components as units of UI and the declarative rendering model"
+      ],
+      "starterFiles": [
+        {
+          "path": "vanilla.html",
+          "content": "<!DOCTYPE html>\n<html>\n<head><title>Vanilla JS Counter</title></head>\n<body>\n  <h1>Counter (Vanilla JS)</h1>\n  <p>Count: <span id=\"count\">0</span></p>\n  <button id=\"inc\">+</button>\n  <button id=\"dec\">-</button>\n  <button id=\"reset\">Reset</button>\n\n  <script>\n    // Vanilla JS: We tell the browser HOW to update the DOM.\n    // Every state change = manual DOM surgery.\n    let count = 0;\n    const countEl = document.getElementById('count');\n\n    document.getElementById('inc').onclick = () => {\n      count++;\n      countEl.textContent = count;  // manually update\n    };\n    document.getElementById('dec').onclick = () => {\n      count--;\n      countEl.textContent = count;  // manually update\n    };\n    document.getElementById('reset').onclick = () => {\n      count = 0;\n      countEl.textContent = count;  // manually update\n    };\n  </script>\n</body>\n</html>\n"
+        },
+        {
+          "path": "react-counter.md",
+          "content": "# The Same Counter in React (Pseudocode)\n\nIn React, you describe WHAT the UI should look like given the current state.\nReact figures out HOW to update the DOM.\n\n```tsx\nfunction Counter() {\n  const [count, setCount] = useState(0);\n\n  // We just describe the UI:\n  return (\n    <div>\n      <h1>Counter (React)</h1>\n      <p>Count: {count}</p>\n      <button onClick={() => setCount(count + 1)}>+</button>\n      <button onClick={() => setCount(count - 1)}>-</button>\n      <button onClick={() => setCount(0)}>Reset</button>\n    </div>\n  );\n}\n```\n\n## Questions to think about:\n1. In the vanilla version, what do you have to do every time the count changes?\n2. In the React version, what do you do instead?\n3. What does \"declarative\" mean? What's the opposite (\"imperative\")?\n4. What would happen in the vanilla version if you added a 3rd place on the page that shows the count?\n\nDiscuss these with your tutor!\n"
+        }
       ]
     },
     {
@@ -43,6 +79,20 @@
       "outcomes": [
         "Scaffold and run a React + TypeScript project using Vite",
         "Explain the basic project structure and tsconfig settings"
+      ],
+      "starterFiles": [
+        {
+          "path": "setup-notes.md",
+          "content": "# Vite + React + TypeScript Setup\n\nThis lesson is about creating a real project on your machine.\nOpen your terminal and follow along with your tutor.\n\n## Commands you'll run:\n\n```bash\n# Create the project\nnpm create vite@latest my-app -- --template react-ts\n\n# Enter the directory\ncd my-app\n\n# Install dependencies\nnpm install\n\n# Start the dev server\nnpm run dev\n```\n\n## Project structure to understand:\n```\nmy-app/\n├── src/\n│   ├── main.tsx        ← Entry point: mounts React to the DOM\n│   ├── App.tsx         ← Root component\n│   └── App.css\n├── index.html          ← Shell HTML (React injects into <div id=\"root\">)\n├── vite.config.ts      ← Vite configuration\n├── tsconfig.json       ← TypeScript compiler settings\n└── package.json\n```\n\n## Questions for your tutor:\n- What does `index.html` do?\n- What is `main.tsx` and why does it exist?\n- What does `strict: true` in tsconfig.json mean?\n- What's the difference between `devDependencies` and `dependencies`?\n"
+        },
+        {
+          "path": "src/main.tsx",
+          "content": "import React from 'react';\nimport ReactDOM from 'react-dom/client';\nimport App from './App';\n\n// This file mounts the React app into the HTML page.\n// The <div id=\"root\"> in index.html is where React takes over.\nReactDOM.createRoot(document.getElementById('root')!).render(\n  <React.StrictMode>\n    <App />\n  </React.StrictMode>\n);\n"
+        },
+        {
+          "path": "src/App.tsx",
+          "content": "// This is the root component of your app.\n// For now it just shows a welcome message.\nexport default function App() {\n  return (\n    <div>\n      <h1>Hello from React + Vite + TypeScript!</h1>\n      <p>Edit me in src/App.tsx</p>\n    </div>\n  );\n}\n"
+        }
       ]
     },
     {
@@ -51,6 +101,12 @@
       "outcomes": [
         "Read and write JSX with embedded expressions, conditional rendering, and lists",
         "Explain that JSX is function calls and how it compiles"
+      ],
+      "starterFiles": [
+        {
+          "path": "src/App.tsx",
+          "content": "// Lesson 6: JSX\n// JSX looks like HTML but it's actually JavaScript function calls.\n// React.createElement('h1', null, 'Hello') === <h1>Hello</h1>\n\ntype Product = {\n  id: number;\n  name: string;\n  price: number;\n  inStock: boolean;\n};\n\nconst products: Product[] = [\n  { id: 1, name: \"Laptop\", price: 999, inStock: true },\n  { id: 2, name: \"Headphones\", price: 79, inStock: false },\n  { id: 3, name: \"Mouse\", price: 29, inStock: true },\n];\n\nexport default function App() {\n  // TODO 1: Add a variable `isLoggedIn = true` and conditionally render\n  // \"Welcome back!\" or \"Please log in\" using a ternary expression in JSX.\n\n  // TODO 2: Render the `products` array as an unordered list.\n  // Each item should show: \"[name] - $[price]\" and\n  // show \"✅ In stock\" or \"❌ Out of stock\" based on inStock.\n  // Remember: list items need a unique `key` prop!\n\n  // TODO 3: Add a className to style elements (replace HTML's `class` with JSX's `className`)\n\n  return (\n    <div>\n      <h1>Product Catalog</h1>\n      {/* Your code here */}\n    </div>\n  );\n}\n"
+        }
       ]
     },
     {
@@ -60,6 +116,20 @@
         "Define functional components with typed props",
         "Compose components and pass typed data between them",
         "Use and type children properly"
+      ],
+      "starterFiles": [
+        {
+          "path": "src/App.tsx",
+          "content": "import ProductCard from './components/ProductCard';\nimport Badge from './components/Badge';\n\n// The data our components will display:\nexport type Product = {\n  id: number;\n  name: string;\n  price: number;\n  inStock: boolean;\n  category: string;\n};\n\nconst products: Product[] = [\n  { id: 1, name: \"Laptop\", price: 999, inStock: true, category: \"Electronics\" },\n  { id: 2, name: \"Headphones\", price: 79, inStock: false, category: \"Electronics\" },\n  { id: 3, name: \"Notebook\", price: 12, inStock: true, category: \"Stationery\" },\n];\n\nexport default function App() {\n  return (\n    <div style={{ padding: 24, fontFamily: 'sans-serif' }}>\n      <h1>Shop</h1>\n      <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>\n        {products.map(product => (\n          <ProductCard key={product.id} product={product} />\n        ))}\n      </div>\n    </div>\n  );\n}\n"
+        },
+        {
+          "path": "src/components/ProductCard.tsx",
+          "content": "import type { Product } from '../App';\nimport Badge from './Badge';\n\n// TODO: Define the props type for ProductCard.\n// It should accept a single `product` prop of type Product.\n\n// TODO: Build the ProductCard component.\n// It should display:\n//   - Product name (as a heading)\n//   - Price formatted as \"$999.00\"\n//   - A Badge showing the category\n//   - A Badge showing \"In Stock\" (green) or \"Out of Stock\" (red)\n//     based on product.inStock\n\nexport default function ProductCard(/* props here */) {\n  return (\n    <div style={{ border: '1px solid #ddd', borderRadius: 8, padding: 16, minWidth: 200 }}>\n      {/* Your code here */}\n    </div>\n  );\n}\n"
+        },
+        {
+          "path": "src/components/Badge.tsx",
+          "content": "// TODO: Build a reusable Badge component.\n// Props:\n//   - label: string   (the text to show)\n//   - color?: string  (optional background color, default to '#eee')\n//   - children?: React.ReactNode  (alternative to label — try BOTH approaches)\n\n// A Badge should look like a small pill/tag.\n// Style example: small rounded box with background color and text.\n\nexport default function Badge(/* props here */) {\n  return (\n    <span style={{ /* your styles here */ }}>\n      {/* Your content here */}\n    </span>\n  );\n}\n"
+        }
       ]
     },
     {
@@ -69,6 +139,24 @@
         "Manage local component state with useState",
         "Explain the difference between state and props",
         "Avoid common pitfalls such as stale state and mutating state directly"
+      ],
+      "starterFiles": [
+        {
+          "path": "src/App.tsx",
+          "content": "import Counter from './components/Counter';\nimport Toggle from './components/Toggle';\nimport ColorPicker from './components/ColorPicker';\n\nexport default function App() {\n  return (\n    <div style={{ padding: 24, fontFamily: 'sans-serif', display: 'flex', flexDirection: 'column', gap: 32 }}>\n      <h1>useState Exercises</h1>\n      <Counter />\n      <Toggle />\n      <ColorPicker />\n    </div>\n  );\n}\n"
+        },
+        {
+          "path": "src/components/Counter.tsx",
+          "content": "import { useState } from 'react';\n\n// TODO: Build a Counter component with:\n//   - Display: \"Count: [number]\"\n//   - Three buttons: Increment (+1), Decrement (-1), Reset (back to 0)\n//   - The count should never go below 0 (disable or ignore decrement at 0)\n//   - Add a prop `initialCount?: number` (default 0) to make it configurable\n\nexport default function Counter({ initialCount = 0 }: { initialCount?: number }) {\n  // const [count, setCount] = useState(initialCount);\n\n  return (\n    <div>\n      <h2>Counter</h2>\n      {/* Your code here */}\n    </div>\n  );\n}\n"
+        },
+        {
+          "path": "src/components/Toggle.tsx",
+          "content": "import { useState } from 'react';\n\n// TODO: Build a Toggle component that:\n//   - Shows a button that says \"ON\" or \"OFF\" based on state\n//   - Clicking the button flips the state\n//   - Shows a colored box: green when ON, gray when OFF\n//   - IMPORTANT: Use the functional update form: setOn(prev => !prev)\n//     Ask your tutor why this matters (stale state!)\n\nexport default function Toggle() {\n  return (\n    <div>\n      <h2>Toggle</h2>\n      {/* Your code here */}\n    </div>\n  );\n}\n"
+        },
+        {
+          "path": "src/components/ColorPicker.tsx",
+          "content": "import { useState } from 'react';\n\nconst COLORS = ['red', 'blue', 'green', 'purple', 'orange'];\n\n// TODO: Build a ColorPicker component that:\n//   - Shows the list of colors as clickable buttons\n//   - Clicking a color makes it the selected color\n//   - Shows a preview box filled with the selected color\n//   - Shows the name of the selected color as text\n//   - No color is selected initially (state = null)\n\nexport default function ColorPicker() {\n  return (\n    <div>\n      <h2>Color Picker</h2>\n      {/* Your code here */}\n    </div>\n  );\n}\n"
+        }
       ]
     },
     {
@@ -77,6 +165,16 @@
       "outcomes": [
         "Wire event handlers with proper TypeScript typing",
         "Build a controlled form with multiple inputs and validation"
+      ],
+      "starterFiles": [
+        {
+          "path": "src/App.tsx",
+          "content": "import SignupForm from './components/SignupForm';\n\nexport default function App() {\n  return (\n    <div style={{ padding: 24, fontFamily: 'sans-serif', maxWidth: 400 }}>\n      <h1>Sign Up</h1>\n      <SignupForm />\n    </div>\n  );\n}\n"
+        },
+        {
+          "path": "src/components/SignupForm.tsx",
+          "content": "import { useState } from 'react';\n\n// TODO: Build a controlled signup form with these fields:\n//   - username (text input, required, min 3 characters)\n//   - email (email input, required, must contain @)\n//   - password (password input, required, min 8 characters)\n//   - confirmPassword (password input, must match password)\n//   - agreeToTerms (checkbox, required)\n\n// Requirements:\n//   1. All inputs are controlled (value from state, onChange updates state)\n//   2. Show validation errors BELOW each field (not as alerts)\n//   3. Errors appear only after the user has touched the field (onBlur)\n//   4. The submit button is disabled if the form has errors\n//   5. On successful submit, show a success message (no page reload!)\n//   6. Type all event handlers: React.ChangeEvent<HTMLInputElement>, etc.\n\ntype FormData = {\n  username: string;\n  email: string;\n  password: string;\n  confirmPassword: string;\n  agreeToTerms: boolean;\n};\n\ntype FormErrors = Partial<Record<keyof FormData, string>>;\n\nexport default function SignupForm() {\n  const [formData, setFormData] = useState<FormData>({\n    username: '',\n    email: '',\n    password: '',\n    confirmPassword: '',\n    agreeToTerms: false,\n  });\n\n  // TODO: Add touched state, errors state, submitted state\n  // TODO: Add validation logic\n  // TODO: Add event handlers\n\n  return (\n    <form onSubmit={(e) => e.preventDefault()}>\n      {/* Build the form here */}\n    </form>\n  );\n}\n"
+        }
       ]
     },
     {
@@ -86,6 +184,24 @@
         "Use useEffect for genuine side effects such as subscriptions, fetches, and timers",
         "Explain the dependency array and cleanup functions",
         "Identify common anti-patterns and when not to reach for useEffect"
+      ],
+      "starterFiles": [
+        {
+          "path": "src/App.tsx",
+          "content": "import Timer from './components/Timer';\nimport WindowSize from './components/WindowSize';\nimport DocumentTitle from './components/DocumentTitle';\n\nexport default function App() {\n  return (\n    <div style={{ padding: 24, fontFamily: 'sans-serif', display: 'flex', flexDirection: 'column', gap: 32 }}>\n      <h1>useEffect Exercises</h1>\n      <Timer />\n      <WindowSize />\n      <DocumentTitle />\n    </div>\n  );\n}\n"
+        },
+        {
+          "path": "src/components/Timer.tsx",
+          "content": "import { useState, useEffect } from 'react';\n\n// TODO: Build a Timer component that:\n//   - Shows elapsed seconds since the component mounted\n//   - Has a Start/Stop button to pause/resume\n//   - Has a Reset button\n//   - CRITICAL: Clean up the interval in the useEffect return function!\n//     Otherwise you'll get a memory leak.\n//   - Hint: setInterval returns an ID; clearInterval(id) stops it.\n\nexport default function Timer() {\n  const [seconds, setSeconds] = useState(0);\n  const [running, setRunning] = useState(false);\n\n  // TODO: useEffect goes here\n\n  return (\n    <div>\n      <h2>Timer</h2>\n      <p style={{ fontSize: 32, fontFamily: 'monospace' }}>{seconds}s</p>\n      <button onClick={() => setRunning(r => !r)}>\n        {running ? 'Stop' : 'Start'}\n      </button>\n      <button onClick={() => { setRunning(false); setSeconds(0); }} style={{ marginLeft: 8 }}>\n        Reset\n      </button>\n    </div>\n  );\n}\n"
+        },
+        {
+          "path": "src/components/WindowSize.tsx",
+          "content": "import { useState, useEffect } from 'react';\n\n// TODO: Build a WindowSize component that:\n//   - Shows the current window width and height\n//   - Updates in real time as the user resizes the window\n//   - CRITICAL: Remove the event listener in the useEffect cleanup!\n//   - Hint: window.addEventListener('resize', handler)\n//           window.removeEventListener('resize', handler)\n\nexport default function WindowSize() {\n  // TODO: state for width and height\n\n  // TODO: useEffect to listen for resize\n\n  return (\n    <div>\n      <h2>Window Size</h2>\n      {/* Show width and height here */}\n    </div>\n  );\n}\n"
+        },
+        {
+          "path": "src/components/DocumentTitle.tsx",
+          "content": "import { useState, useEffect } from 'react';\n\n// TODO: Build a DocumentTitle component that:\n//   - Has a text input where you type a title\n//   - Syncs that title to document.title (the browser tab name)\n//   - RESET document.title to \"Fellowship Tutor\" on unmount\n//   - This is a common real-world useEffect use case!\n\nexport default function DocumentTitle() {\n  const [title, setTitle] = useState('');\n\n  // TODO: useEffect to sync title → document.title\n\n  return (\n    <div>\n      <h2>Document Title Sync</h2>\n      <input\n        value={title}\n        onChange={e => setTitle(e.target.value)}\n        placeholder=\"Type a tab title...\"\n      />\n      <p>Current tab title: <strong>{document.title}</strong></p>\n    </div>\n  );\n}\n"
+        }
       ]
     },
     {
@@ -94,6 +210,20 @@
       "outcomes": [
         "Identify when state should be lifted to a common ancestor",
         "Refactor a multi-component feature so state lives in the right place"
+      ],
+      "starterFiles": [
+        {
+          "path": "src/App.tsx",
+          "content": "// Lesson 11: Lifting State Up\n// The problem: two sibling components need to share state.\n// The solution: lift the state to their common parent.\n\nimport { useState } from 'react';\nimport ProductList from './components/ProductList';\nimport Cart from './components/Cart';\n\nexport type CartItem = {\n  id: number;\n  name: string;\n  price: number;\n  quantity: number;\n};\n\nconst PRODUCTS = [\n  { id: 1, name: 'Apple', price: 0.99 },\n  { id: 2, name: 'Banana', price: 0.59 },\n  { id: 3, name: 'Cherry', price: 3.99 },\n  { id: 4, name: 'Date', price: 5.49 },\n];\n\nexport default function App() {\n  // TODO: Lift cart state up here (to the common parent of ProductList and Cart).\n  // State: cartItems: CartItem[]\n  // Handlers: addToCart(product), removeFromCart(id), updateQuantity(id, qty)\n\n  return (\n    <div style={{ padding: 24, fontFamily: 'sans-serif', display: 'flex', gap: 32 }}>\n      <ProductList\n        products={PRODUCTS}\n        // TODO: pass addToCart\n      />\n      <Cart\n        // TODO: pass cartItems, removeFromCart, updateQuantity\n      />\n    </div>\n  );\n}\n"
+        },
+        {
+          "path": "src/components/ProductList.tsx",
+          "content": "// TODO: ProductList shows all available products.\n// Each product has an \"Add to Cart\" button.\n// When clicked, it calls the `onAddToCart` prop.\n\ntype Product = { id: number; name: string; price: number };\n\ntype Props = {\n  products: Product[];\n  onAddToCart: (product: Product) => void;\n};\n\nexport default function ProductList({ products, onAddToCart }: Props) {\n  return (\n    <div>\n      <h2>Products</h2>\n      {products.map(product => (\n        <div key={product.id} style={{ marginBottom: 8 }}>\n          <span>{product.name} — ${product.price.toFixed(2)}</span>\n          <button onClick={() => onAddToCart(product)} style={{ marginLeft: 8 }}>\n            Add to Cart\n          </button>\n        </div>\n      ))}\n    </div>\n  );\n}\n"
+        },
+        {
+          "path": "src/components/Cart.tsx",
+          "content": "import type { CartItem } from '../App';\n\n// TODO: Cart shows all items in the cart.\n// Each item has:\n//   - Name and price\n//   - Quantity controls (+ and - buttons)\n//   - Remove button\n// Show the total price at the bottom.\n\ntype Props = {\n  items: CartItem[];\n  onRemove: (id: number) => void;\n  onUpdateQuantity: (id: number, quantity: number) => void;\n};\n\nexport default function Cart({ items, onRemove, onUpdateQuantity }: Props) {\n  const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);\n\n  return (\n    <div style={{ minWidth: 200 }}>\n      <h2>Cart ({items.length} items)</h2>\n      {items.length === 0 && <p style={{ color: '#888' }}>Cart is empty</p>}\n      {/* TODO: Render cart items */}\n      <p><strong>Total: ${total.toFixed(2)}</strong></p>\n    </div>\n  );\n}\n"
+        }
       ]
     },
     {
@@ -102,6 +232,20 @@
       "outcomes": [
         "Build flexible reusable components using children and render-prop style composition",
         "Prefer composition over configuration props for reusability"
+      ],
+      "starterFiles": [
+        {
+          "path": "src/App.tsx",
+          "content": "import Card from './components/Card';\nimport Modal from './components/Modal';\nimport { useState } from 'react';\n\nexport default function App() {\n  const [modalOpen, setModalOpen] = useState(false);\n\n  return (\n    <div style={{ padding: 24, fontFamily: 'sans-serif' }}>\n      <h1>Composition Patterns</h1>\n\n      {/* Card with children */}\n      <Card>\n        <Card.Header>My First Card</Card.Header>\n        <Card.Body>\n          <p>This card uses the compound component pattern.</p>\n          <p>Header, Body, and Footer are sub-components.</p>\n        </Card.Body>\n        <Card.Footer>\n          <button>Action</button>\n        </Card.Footer>\n      </Card>\n\n      {/* Modal */}\n      <button onClick={() => setModalOpen(true)} style={{ marginTop: 16 }}>\n        Open Modal\n      </button>\n      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)}>\n        <h2>Modal Title</h2>\n        <p>Modal content goes here. Click outside or ✕ to close.</p>\n      </Modal>\n    </div>\n  );\n}\n"
+        },
+        {
+          "path": "src/components/Card.tsx",
+          "content": "import { type ReactNode } from 'react';\n\n// TODO: Build a Card compound component.\n// Card has three sub-components: Card.Header, Card.Body, Card.Footer\n// Each accepts `children: ReactNode`\n// They should be styled appropriately (border, padding, etc.)\n//\n// Usage (see App.tsx):\n// <Card>\n//   <Card.Header>Title</Card.Header>\n//   <Card.Body>Content</Card.Body>\n//   <Card.Footer>Actions</Card.Footer>\n// </Card>\n\nfunction Card({ children }: { children: ReactNode }) {\n  return (\n    <div style={{ border: '1px solid #ddd', borderRadius: 8, overflow: 'hidden', maxWidth: 400 }}>\n      {children}\n    </div>\n  );\n}\n\n// TODO: Add Card.Header, Card.Body, Card.Footer as sub-components\nCard.Header = function Header({ children }: { children: ReactNode }) {\n  // Your implementation\n  return <div>{children}</div>;\n};\n\nCard.Body = function Body({ children }: { children: ReactNode }) {\n  // Your implementation\n  return <div>{children}</div>;\n};\n\nCard.Footer = function Footer({ children }: { children: ReactNode }) {\n  // Your implementation\n  return <div>{children}</div>;\n};\n\nexport default Card;\n"
+        },
+        {
+          "path": "src/components/Modal.tsx",
+          "content": "import { type ReactNode, useEffect } from 'react';\n\n// TODO: Build a Modal component that:\n//   - Shows an overlay (dark background) when `isOpen` is true\n//   - Renders `children` inside a centered box\n//   - Has a close (✕) button in the top-right corner\n//   - Closes when the overlay is clicked\n//   - Closes when Escape key is pressed (useEffect + keydown listener!)\n\ntype ModalProps = {\n  isOpen: boolean;\n  onClose: () => void;\n  children: ReactNode;\n};\n\nexport default function Modal({ isOpen, onClose, children }: ModalProps) {\n  // TODO: useEffect for Escape key\n\n  if (!isOpen) return null;\n\n  return (\n    <div\n      style={{\n        position: 'fixed', inset: 0,\n        background: 'rgba(0,0,0,0.5)',\n        display: 'flex', alignItems: 'center', justifyContent: 'center',\n        zIndex: 1000,\n      }}\n      onClick={onClose}\n    >\n      <div\n        style={{ background: 'white', borderRadius: 12, padding: 32, maxWidth: 480, width: '90%', position: 'relative' }}\n        onClick={e => e.stopPropagation()}\n      >\n        <button\n          onClick={onClose}\n          style={{ position: 'absolute', top: 12, right: 12, background: 'none', border: 'none', fontSize: 20, cursor: 'pointer' }}\n        >\n          ✕\n        </button>\n        {children}\n      </div>\n    </div>\n  );\n}\n"
+        }
       ]
     },
     {
@@ -110,6 +254,24 @@
       "outcomes": [
         "Extract stateful logic into a custom hook with a clean API",
         "Explain the rules of hooks and why they exist"
+      ],
+      "starterFiles": [
+        {
+          "path": "src/App.tsx",
+          "content": "import { useLocalStorage } from './hooks/useLocalStorage';\nimport { useDebounce } from './hooks/useDebounce';\nimport { useFetch } from './hooks/useFetch';\nimport { useState } from 'react';\n\nexport default function App() {\n  // Test useLocalStorage\n  const [theme, setTheme] = useLocalStorage<'light' | 'dark'>('theme', 'light');\n\n  // Test useDebounce\n  const [search, setSearch] = useState('');\n  const debouncedSearch = useDebounce(search, 500);\n\n  // Test useFetch\n  const { data, loading, error } = useFetch<{ name: string }[]>(\n    'https://api.github.com/users/octocat/repos?per_page=5'\n  );\n\n  return (\n    <div style={{ padding: 24, fontFamily: 'sans-serif', display: 'flex', flexDirection: 'column', gap: 32 }}>\n      <h1>Custom Hooks</h1>\n\n      <section>\n        <h2>useLocalStorage</h2>\n        <p>Current theme: <strong>{theme}</strong></p>\n        <button onClick={() => setTheme(t => t === 'light' ? 'dark' : 'light')}>\n          Toggle Theme\n        </button>\n        <p><em>Refresh the page — theme should persist!</em></p>\n      </section>\n\n      <section>\n        <h2>useDebounce</h2>\n        <input value={search} onChange={e => setSearch(e.target.value)} placeholder=\"Type to search...\" />\n        <p>Immediate: {search}</p>\n        <p>Debounced (500ms): {debouncedSearch}</p>\n      </section>\n\n      <section>\n        <h2>useFetch</h2>\n        {loading && <p>Loading...</p>}\n        {error && <p style={{ color: 'red' }}>Error: {error.message}</p>}\n        {data && (\n          <ul>\n            {data.map((repo, i) => <li key={i}>{repo.name}</li>)}\n          </ul>\n        )}\n      </section>\n    </div>\n  );\n}\n"
+        },
+        {
+          "path": "src/hooks/useLocalStorage.ts",
+          "content": "import { useState } from 'react';\n\n// TODO: Build `useLocalStorage<T>(key: string, initialValue: T)`\n// It should:\n//   - Read from localStorage on mount (JSON.parse)\n//   - Return [value, setValue] just like useState\n//   - When setValue is called, update BOTH state AND localStorage\n//   - Handle the case where localStorage.getItem returns null\n//   - Handle JSON.parse errors gracefully (use try/catch)\n//   - Accept a function as initialValue (like useState does)\n//   - The returned setValue should also accept a function: setValue(prev => ...)\n\nexport function useLocalStorage<T>(key: string, initialValue: T) {\n  // Your implementation here\n}\n"
+        },
+        {
+          "path": "src/hooks/useDebounce.ts",
+          "content": "import { useState, useEffect } from 'react';\n\n// TODO: Build `useDebounce<T>(value: T, delay: number): T`\n// It should:\n//   - Return the value, but only update after `delay` ms of no changes\n//   - Use useEffect with a setTimeout\n//   - Clean up the timeout if value changes before delay expires\n\nexport function useDebounce<T>(value: T, delay: number): T {\n  // Your implementation here\n  return value; // placeholder\n}\n"
+        },
+        {
+          "path": "src/hooks/useFetch.ts",
+          "content": "import { useState, useEffect } from 'react';\n\n// TODO: Build `useFetch<T>(url: string)`\n// Returns: { data: T | null, loading: boolean, error: Error | null }\n// It should:\n//   - Start with loading: true\n//   - Fetch the URL and set data on success\n//   - Set error on failure\n//   - Set loading: false when done (either success or failure)\n//   - Cancel the request if the component unmounts (AbortController!)\n//   - Re-fetch if the URL changes\n\ntype FetchResult<T> = {\n  data: T | null;\n  loading: boolean;\n  error: Error | null;\n};\n\nexport function useFetch<T>(url: string): FetchResult<T> {\n  // Your implementation here\n  return { data: null, loading: true, error: null }; // placeholder\n}\n"
+        }
       ]
     },
     {
@@ -118,6 +280,28 @@
       "outcomes": [
         "Create and consume a Context with proper TypeScript typing",
         "Explain when Context is the right tool versus when it is overkill"
+      ],
+      "starterFiles": [
+        {
+          "path": "src/App.tsx",
+          "content": "import { ThemeProvider } from './context/ThemeContext';\nimport { AuthProvider } from './context/AuthContext';\nimport Header from './components/Header';\nimport Content from './components/Content';\n\nexport default function App() {\n  return (\n    <ThemeProvider>\n      <AuthProvider>\n        <Header />\n        <Content />\n      </AuthProvider>\n    </ThemeProvider>\n  );\n}\n"
+        },
+        {
+          "path": "src/context/ThemeContext.tsx",
+          "content": "import { createContext, useContext, useState, type ReactNode } from 'react';\n\n// TODO: Create a ThemeContext that provides:\n//   - theme: 'light' | 'dark'\n//   - toggleTheme: () => void\n//\n// Pattern:\n//   1. createContext with a typed default value\n//   2. Create a ThemeProvider component\n//   3. Create a useTheme hook that throws if used outside provider\n\ntype Theme = 'light' | 'dark';\n\ntype ThemeContextType = {\n  theme: Theme;\n  toggleTheme: () => void;\n};\n\n// TODO: Create ThemeContext\n// const ThemeContext = createContext<ThemeContextType | null>(null);\n\nexport function ThemeProvider({ children }: { children: ReactNode }) {\n  const [theme, setTheme] = useState<Theme>('light');\n  // TODO: Provide the context value\n  return <>{children}</>;\n}\n\nexport function useTheme(): ThemeContextType {\n  // TODO: useContext + throw if null\n  throw new Error('useTheme must be used within ThemeProvider');\n}\n"
+        },
+        {
+          "path": "src/context/AuthContext.tsx",
+          "content": "import { createContext, useContext, useState, type ReactNode } from 'react';\n\n// TODO: Create an AuthContext that provides:\n//   - user: { name: string; email: string } | null\n//   - login: (name: string, email: string) => void\n//   - logout: () => void\n//   - isLoggedIn: boolean  (derived from user !== null)\n\ntype User = { name: string; email: string };\n\ntype AuthContextType = {\n  user: User | null;\n  login: (name: string, email: string) => void;\n  logout: () => void;\n  isLoggedIn: boolean;\n};\n\nexport function AuthProvider({ children }: { children: ReactNode }) {\n  // TODO: Implement\n  return <>{children}</>;\n}\n\nexport function useAuth(): AuthContextType {\n  // TODO: Implement\n  throw new Error('useAuth must be used within AuthProvider');\n}\n"
+        },
+        {
+          "path": "src/components/Header.tsx",
+          "content": "import { useTheme } from '../context/ThemeContext';\nimport { useAuth } from '../context/AuthContext';\n\n// TODO: Build a Header that:\n//   - Shows \"Dark Mode\" / \"Light Mode\" toggle button (uses useTheme)\n//   - Shows user name if logged in, or \"Guest\" if not (uses useAuth)\n//   - Has a Login/Logout button\n//   - Changes background based on theme\n\nexport default function Header() {\n  const { theme, toggleTheme } = useTheme();\n  const { user, login, logout, isLoggedIn } = useAuth();\n\n  return (\n    <header style={{\n      padding: '12px 24px',\n      background: theme === 'dark' ? '#222' : '#f5f5f5',\n      color: theme === 'dark' ? 'white' : 'black',\n      display: 'flex',\n      justifyContent: 'space-between',\n      alignItems: 'center',\n    }}>\n      <h1 style={{ margin: 0, fontSize: 18 }}>MyApp</h1>\n      <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>\n        {/* Theme toggle */}\n        {/* Auth section */}\n      </div>\n    </header>\n  );\n}\n"
+        },
+        {
+          "path": "src/components/Content.tsx",
+          "content": "import { useTheme } from '../context/ThemeContext';\nimport { useAuth } from '../context/AuthContext';\n\n// TODO: Build a Content area that:\n//   - Applies background/text colors based on theme\n//   - Shows personalized content if logged in\n//   - Shows a login prompt if not logged in\n\nexport default function Content() {\n  const { theme } = useTheme();\n  const { isLoggedIn, user } = useAuth();\n\n  return (\n    <main style={{\n      padding: 24,\n      minHeight: '80vh',\n      background: theme === 'dark' ? '#1a1a1a' : 'white',\n      color: theme === 'dark' ? '#eee' : '#111',\n    }}>\n      {/* Show personalized or guest content */}\n    </main>\n  );\n}\n"
+        }
       ]
     },
     {
@@ -127,6 +311,24 @@
         "Build a typed React app from scratch using Vite",
         "Demonstrate clean component decomposition, lifted state, and at least one custom hook",
         "Deliver the project as a GitHub PR with passing TypeScript compilation"
+      ],
+      "starterFiles": [
+        {
+          "path": "src/App.tsx",
+          "content": "// Final Project: Todos App\n// Build a full-featured todo list using everything from lessons 1-14.\n\nimport { useState } from 'react';\n\nexport type Todo = {\n  id: number;\n  text: string;\n  completed: boolean;\n  createdAt: Date;\n};\n\nexport type Filter = 'all' | 'active' | 'completed';\n\n// Requirements:\n// ✅ Add new todos (press Enter or click Add)\n// ✅ Mark todos as complete (checkbox)\n// ✅ Delete individual todos\n// ✅ Filter: All / Active / Completed\n// ✅ Show count of remaining todos\n// ✅ \"Clear completed\" button\n// ✅ Persist todos in localStorage (use your useLocalStorage hook!)\n// ✅ At least 2 sub-components (e.g. TodoItem, TodoInput, FilterBar)\n// ✅ All TypeScript, no `any`\n\nexport default function App() {\n  return (\n    <div style={{ maxWidth: 500, margin: '40px auto', fontFamily: 'sans-serif', padding: '0 24px' }}>\n      <h1>Todos</h1>\n      {/* Build your app here */}\n    </div>\n  );\n}\n"
+        },
+        {
+          "path": "src/components/TodoInput.tsx",
+          "content": "// TODO: A text input + Add button for creating new todos.\n// When the user presses Enter or clicks Add:\n//   - Call onAdd(text) if text is not empty\n//   - Clear the input\n\nexport default function TodoInput({ onAdd }: { onAdd: (text: string) => void }) {\n  return (\n    <div>\n      {/* Your implementation */}\n    </div>\n  );\n}\n"
+        },
+        {
+          "path": "src/components/TodoItem.tsx",
+          "content": "import type { Todo } from '../App';\n\n// TODO: A single todo item showing:\n//   - Checkbox to toggle completion (line-through when done)\n//   - Todo text\n//   - Delete button (shown on hover ideally)\n\ntype Props = {\n  todo: Todo;\n  onToggle: (id: number) => void;\n  onDelete: (id: number) => void;\n};\n\nexport default function TodoItem({ todo, onToggle, onDelete }: Props) {\n  return (\n    <li>\n      {/* Your implementation */}\n    </li>\n  );\n}\n"
+        },
+        {
+          "path": "src/hooks/useLocalStorage.ts",
+          "content": "import { useState } from 'react';\n\n// Copy your useLocalStorage hook from lesson 13 here!\n// Or implement it fresh from memory.\n\nexport function useLocalStorage<T>(key: string, initialValue: T) {\n  // Your implementation\n}\n"
+        }
       ]
     },
     {
@@ -135,6 +337,16 @@
       "outcomes": [
         "Identify smells in React components such as long files, mixed concerns, and deep nesting",
         "Refactor a messy component into smaller, single-responsibility units"
+      ],
+      "starterFiles": [
+        {
+          "path": "src/MessyDashboard.tsx",
+          "content": "// This component has many code smells. Identify them and refactor!\nimport { useState, useEffect } from 'react';\n\nexport default function MessyDashboard({ userId }: { userId: string }) {\n  const [userData, setUserData] = useState<any>(null);\n  const [userPosts, setUserPosts] = useState<any[]>([]);\n  const [loading, setLoading] = useState(false);\n  const [error, setError] = useState<string | null>(null);\n  const [tab, setTab] = useState<'profile' | 'posts' | 'settings'>('profile');\n  const [editMode, setEditMode] = useState(false);\n  const [formName, setFormName] = useState('');\n  const [formBio, setFormBio] = useState('');\n  const [formEmail, setFormEmail] = useState('');\n  const [saveLoading, setSaveLoading] = useState(false);\n  const [saveError, setSaveError] = useState<string | null>(null);\n\n  useEffect(() => {\n    setLoading(true);\n    fetch(`https://jsonplaceholder.typicode.com/users/${userId}`)\n      .then(r => r.json())\n      .then(data => {\n        setUserData(data);\n        setFormName(data.name);\n        setFormEmail(data.email);\n        setLoading(false);\n      })\n      .catch(e => { setError(e.message); setLoading(false); });\n  }, [userId]);\n\n  useEffect(() => {\n    fetch(`https://jsonplaceholder.typicode.com/posts?userId=${userId}`)\n      .then(r => r.json())\n      .then(posts => setUserPosts(posts.slice(0, 5)))\n      .catch(console.error);\n  }, [userId]);\n\n  const handleSave = async () => {\n    setSaveLoading(true);\n    try {\n      const res = await fetch(`https://jsonplaceholder.typicode.com/users/${userId}`, {\n        method: 'PUT',\n        body: JSON.stringify({ name: formName, email: formEmail }),\n        headers: { 'Content-Type': 'application/json' }\n      });\n      const updated = await res.json();\n      setUserData(updated);\n      setEditMode(false);\n    } catch (e: any) {\n      setSaveError(e.message);\n    } finally {\n      setSaveLoading(false);\n    }\n  };\n\n  if (loading) return <div>Loading...</div>;\n  if (error) return <div>Error: {error}</div>;\n  if (!userData) return null;\n\n  return (\n    <div style={{ maxWidth: 600, margin: '0 auto', fontFamily: 'sans-serif', padding: 24 }}>\n      <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>\n        {(['profile', 'posts', 'settings'] as const).map(t => (\n          <button key={t} onClick={() => setTab(t)} style={{ padding: '8px 16px', background: tab === t ? '#0070f3' : '#eee', color: tab === t ? 'white' : 'black', border: 'none', borderRadius: 4, cursor: 'pointer' }}>\n            {t.charAt(0).toUpperCase() + t.slice(1)}\n          </button>\n        ))}\n      </div>\n\n      {tab === 'profile' && (\n        <div>\n          {!editMode ? (\n            <div>\n              <h2>{userData.name}</h2>\n              <p>{userData.email}</p>\n              <p>{userData.phone}</p>\n              <button onClick={() => setEditMode(true)}>Edit</button>\n            </div>\n          ) : (\n            <div>\n              <input value={formName} onChange={e => setFormName(e.target.value)} />\n              <input value={formEmail} onChange={e => setFormEmail(e.target.value)} />\n              {saveError && <p style={{ color: 'red' }}>{saveError}</p>}\n              <button onClick={handleSave} disabled={saveLoading}>{saveLoading ? 'Saving...' : 'Save'}</button>\n              <button onClick={() => setEditMode(false)}>Cancel</button>\n            </div>\n          )}\n        </div>\n      )}\n\n      {tab === 'posts' && (\n        <div>\n          <h2>Posts</h2>\n          {userPosts.map((post: any) => (\n            <div key={post.id} style={{ marginBottom: 16, padding: 12, border: '1px solid #eee', borderRadius: 8 }}>\n              <h3>{post.title}</h3>\n              <p>{post.body}</p>\n            </div>\n          ))}\n        </div>\n      )}\n\n      {tab === 'settings' && (\n        <div>\n          <h2>Settings</h2>\n          <p>Settings coming soon...</p>\n        </div>\n      )}\n    </div>\n  );\n}\n"
+        },
+        {
+          "path": "src/CleanDashboard.tsx",
+          "content": "// TODO: Refactor MessyDashboard.tsx here into clean components.\n// Identify the smells first, then split and simplify.\n//\n// Smells to find:\n//   - Too many state variables (can any be combined?)\n//   - Mixed concerns (fetch logic + render logic in one place)\n//   - `any` types everywhere\n//   - Deep nesting\n//   - Component doing too many things\n//\n// Suggested structure:\n//   - useDashboard hook (data fetching)\n//   - ProfileTab component\n//   - EditProfileForm component\n//   - PostsTab component\n//   - TabBar component\n\nexport default function CleanDashboard({ userId }: { userId: string }) {\n  return <div>Refactor me!</div>;\n}\n"
+        }
       ]
     },
     {
@@ -143,6 +355,20 @@
       "outcomes": [
         "Separate stateful container components from pure presentational components",
         "Explain why pure components are easier to test and reuse"
+      ],
+      "starterFiles": [
+        {
+          "path": "src/App.tsx",
+          "content": "// Lesson 17: Container vs Presentational\n// The pattern: keep stateful logic in container components,\n// keep rendering in pure presentational components.\n\nimport UserListContainer from './containers/UserListContainer';\n\nexport default function App() {\n  return (\n    <div style={{ padding: 24, fontFamily: 'sans-serif' }}>\n      <h1>User Directory</h1>\n      <UserListContainer />\n    </div>\n  );\n}\n"
+        },
+        {
+          "path": "src/containers/UserListContainer.tsx",
+          "content": "import { useState, useEffect } from 'react';\nimport UserList from '../components/UserList';\n\n// CONTAINER: Handles data fetching and state.\n// Passes data DOWN to presentational components as props.\n// No JSX layout/styling here — just logic.\n\ntype User = {\n  id: number;\n  name: string;\n  email: string;\n  username: string;\n};\n\nexport default function UserListContainer() {\n  const [users, setUsers] = useState<User[]>([]);\n  const [loading, setLoading] = useState(true);\n  const [error, setError] = useState<string | null>(null);\n  const [search, setSearch] = useState('');\n\n  useEffect(() => {\n    fetch('https://jsonplaceholder.typicode.com/users')\n      .then(r => r.json())\n      .then((data: User[]) => { setUsers(data); setLoading(false); })\n      .catch(e => { setError(e.message); setLoading(false); });\n  }, []);\n\n  const filteredUsers = users.filter(u =>\n    u.name.toLowerCase().includes(search.toLowerCase()) ||\n    u.email.toLowerCase().includes(search.toLowerCase())\n  );\n\n  // TODO: Pass all necessary props to UserList\n  return (\n    <UserList\n      users={filteredUsers}\n      loading={loading}\n      error={error}\n      search={search}\n      onSearchChange={setSearch}\n    />\n  );\n}\n"
+        },
+        {
+          "path": "src/components/UserList.tsx",
+          "content": "// PRESENTATIONAL: Pure rendering, no state, no fetching.\n// Takes everything it needs as props.\n// Should be easy to test and reuse in other contexts.\n\ntype User = {\n  id: number;\n  name: string;\n  email: string;\n  username: string;\n};\n\ntype Props = {\n  users: User[];\n  loading: boolean;\n  error: string | null;\n  search: string;\n  onSearchChange: (value: string) => void;\n};\n\n// TODO: Build UserList as a pure presentational component.\n// It should render:\n//   - A search input (controlled by props)\n//   - Loading state\n//   - Error state\n//   - Empty state (no results)\n//   - User cards (name, email, @username)\n\nexport default function UserList({ users, loading, error, search, onSearchChange }: Props) {\n  return (\n    <div>\n      {/* Your implementation */}\n    </div>\n  );\n}\n"
+        }
       ]
     },
     {
@@ -151,6 +377,16 @@
       "outcomes": [
         "Model state as actions and a reducer for non-trivial flows",
         "Explain when useReducer is preferable to multiple useState hooks"
+      ],
+      "starterFiles": [
+        {
+          "path": "src/App.tsx",
+          "content": "// Lesson 18: useReducer\n// When you have multiple related state values and complex transitions,\n// useReducer gives you predictable state management.\n\nimport ShoppingCart from './components/ShoppingCart';\n\nexport default function App() {\n  return (\n    <div style={{ padding: 24, fontFamily: 'sans-serif' }}>\n      <h1>Shopping Cart with useReducer</h1>\n      <ShoppingCart />\n    </div>\n  );\n}\n"
+        },
+        {
+          "path": "src/components/ShoppingCart.tsx",
+          "content": "import { useReducer } from 'react';\n\n// Refactor this component to use useReducer instead of multiple useStates.\n// The state has multiple related pieces that change together.\n\ntype Product = { id: number; name: string; price: number };\ntype CartItem = Product & { quantity: number };\n\ntype CartState = {\n  items: CartItem[];\n  isCheckingOut: boolean;\n  orderComplete: boolean;\n  couponCode: string;\n  discount: number;\n};\n\n// TODO: Define the action types as a discriminated union:\n// type CartAction =\n//   | { type: 'ADD_ITEM'; product: Product }\n//   | { type: 'REMOVE_ITEM'; id: number }\n//   | { type: 'UPDATE_QTY'; id: number; quantity: number }\n//   | { type: 'APPLY_COUPON'; code: string }\n//   | { type: 'START_CHECKOUT' }\n//   | { type: 'COMPLETE_ORDER' }\n//   | { type: 'RESET' };\n\n// TODO: Write the reducer function: (state: CartState, action: CartAction) => CartState\n\nconst PRODUCTS: Product[] = [\n  { id: 1, name: 'T-Shirt', price: 25 },\n  { id: 2, name: 'Jeans', price: 60 },\n  { id: 3, name: 'Sneakers', price: 80 },\n];\n\nconst initialState: CartState = {\n  items: [],\n  isCheckingOut: false,\n  orderComplete: false,\n  couponCode: '',\n  discount: 0,\n};\n\nexport default function ShoppingCart() {\n  // TODO: const [state, dispatch] = useReducer(cartReducer, initialState);\n\n  return (\n    <div style={{ display: 'flex', gap: 32 }}>\n      <div>\n        <h2>Products</h2>\n        {PRODUCTS.map(p => (\n          <div key={p.id} style={{ marginBottom: 8 }}>\n            {p.name} — ${p.price}\n            <button style={{ marginLeft: 8 }}>\n              Add to Cart\n            </button>\n          </div>\n        ))}\n      </div>\n      <div style={{ minWidth: 250 }}>\n        <h2>Cart</h2>\n        {/* Render cart items, total, coupon input, checkout button */}\n      </div>\n    </div>\n  );\n}\n"
+        }
       ]
     },
     {
@@ -160,6 +396,12 @@
         "Identify the cost of unnecessary re-renders",
         "Apply useMemo and useCallback only where they actually help",
         "Measure render behavior with the React DevTools Profiler"
+      ],
+      "starterFiles": [
+        {
+          "path": "src/App.tsx",
+          "content": "// Lesson 19: useMemo and useCallback\n// Rule: Only optimize after you measure a real problem.\n// These hooks add complexity — use them only when the cost is proven.\n\nimport { useState, useMemo, useCallback, memo } from 'react';\n\n// An expensive computation (simulated):\nfunction computeExpensiveStats(numbers: number[]) {\n  // Simulate slow computation:\n  const start = Date.now();\n  while (Date.now() - start < 100) {} // block for 100ms\n  return {\n    sum: numbers.reduce((a, b) => a + b, 0),\n    average: numbers.reduce((a, b) => a + b, 0) / numbers.length,\n    max: Math.max(...numbers),\n    min: Math.min(...numbers),\n  };\n}\n\nconst NUMBERS = Array.from({ length: 1000 }, (_, i) => i + 1);\n\nexport default function App() {\n  const [count, setCount] = useState(0);\n  const [filter, setFilter] = useState(0);\n\n  // TODO 1: Without useMemo, computeExpensiveStats runs on EVERY render.\n  // Add a console.log inside computeExpensiveStats to see this.\n  // Then wrap with useMemo — what's the dependency array?\n  const stats = computeExpensiveStats(NUMBERS.filter(n => n > filter));\n\n  // TODO 2: handleFilterChange is recreated on every render.\n  // Child components that receive it as a prop will also re-render.\n  // Wrap it with useCallback.\n  const handleFilterChange = (value: number) => setFilter(value);\n\n  return (\n    <div style={{ padding: 24, fontFamily: 'sans-serif' }}>\n      <h1>Performance Demo</h1>\n      <p>Unrelated counter (causes re-render): <button onClick={() => setCount(c => c + 1)}>{count}</button></p>\n      <p>Filter numbers greater than: <input type=\"number\" value={filter} onChange={e => handleFilterChange(Number(e.target.value))} /></p>\n      <StatsDisplay stats={stats} />\n    </div>\n  );\n}\n\n// TODO 3: Wrap StatsDisplay with React.memo so it only re-renders when stats changes.\nconst StatsDisplay = memo(function StatsDisplay({ stats }: { stats: ReturnType<typeof computeExpensiveStats> }) {\n  console.log('StatsDisplay rendered');\n  return (\n    <div style={{ background: '#f5f5f5', padding: 16, borderRadius: 8 }}>\n      <p>Sum: {stats.sum}</p>\n      <p>Average: {stats.average.toFixed(2)}</p>\n      <p>Max: {stats.max} | Min: {stats.min}</p>\n    </div>\n  );\n});\n"
+        }
       ]
     },
     {
@@ -168,6 +410,12 @@
       "outcomes": [
         "Explain React reconciliation and what triggers re-renders",
         "Apply React.memo to expensive presentational components when justified"
+      ],
+      "starterFiles": [
+        {
+          "path": "src/App.tsx",
+          "content": "// Lesson 20: React.memo and Re-render Behavior\n// React re-renders a component when:\n//   1. Its state changes\n//   2. Its props change\n//   3. Its parent re-renders (even if props didn't change!)\n\nimport { useState, memo, useCallback } from 'react';\n\n// Add render counters to see when each component renders:\nlet renderCount = { parent: 0, child: 0, memoChild: 0 };\n\nfunction ChildWithoutMemo({ onClick }: { onClick: () => void }) {\n  renderCount.child++;\n  console.log(`ChildWithoutMemo rendered (${renderCount.child} times)`);\n  return (\n    <button onClick={onClick} style={{ padding: '8px 16px', marginRight: 8 }}>\n      Child (no memo) — rendered {renderCount.child}x\n    </button>\n  );\n}\n\n// TODO: Wrap this component with React.memo\nfunction ChildWithMemo({ onClick }: { onClick: () => void }) {\n  renderCount.memoChild++;\n  console.log(`ChildWithMemo rendered (${renderCount.memoChild} times)`);\n  return (\n    <button onClick={onClick} style={{ padding: '8px 16px', background: '#0070f3', color: 'white' }}>\n      Memo Child — rendered {renderCount.memoChild}x\n    </button>\n  );\n}\n\nexport default function App() {\n  renderCount.parent++;\n  const [parentCount, setParentCount] = useState(0);\n  const [childMessage, setChildMessage] = useState('');\n\n  // TODO: Wrap these handlers with useCallback.\n  // Watch what happens to ChildWithMemo's render count:\n  const handleChildWithoutMemoClick = () => setChildMessage('Button 1 clicked');\n  const handleChildWithMemoClick = () => setChildMessage('Memo button clicked');\n\n  return (\n    <div style={{ padding: 24, fontFamily: 'sans-serif' }}>\n      <h1>Re-render Demo</h1>\n      <p>Parent rendered: {renderCount.parent}x</p>\n      <button onClick={() => setParentCount(c => c + 1)} style={{ marginBottom: 16 }}>\n        Re-render parent (count: {parentCount})\n      </button>\n      <div style={{ marginBottom: 16 }}>\n        <ChildWithoutMemo onClick={handleChildWithoutMemoClick} />\n        <ChildWithMemo onClick={handleChildWithMemoClick} />\n      </div>\n      {childMessage && <p>{childMessage}</p>}\n      <p style={{ color: '#888', fontSize: 14 }}>Open the console to see render logs.</p>\n    </div>\n  );\n}\n"
+        }
       ]
     },
     {
@@ -176,6 +424,16 @@
       "outcomes": [
         "Call a REST API from React and store the result in state",
         "Cancel stale requests and avoid race conditions"
+      ],
+      "starterFiles": [
+        {
+          "path": "src/App.tsx",
+          "content": "import { useState } from 'react';\nimport UserProfile from './components/UserProfile';\n\nexport default function App() {\n  const [userId, setUserId] = useState(1);\n\n  return (\n    <div style={{ padding: 24, fontFamily: 'sans-serif' }}>\n      <h1>GitHub-style User Profile</h1>\n      <div style={{ marginBottom: 16 }}>\n        {[1, 2, 3, 4, 5].map(id => (\n          <button\n            key={id}\n            onClick={() => setUserId(id)}\n            style={{ marginRight: 8, background: userId === id ? '#0070f3' : '#eee', color: userId === id ? 'white' : 'black', border: 'none', padding: '4px 12px', borderRadius: 4, cursor: 'pointer' }}\n          >\n            User {id}\n          </button>\n        ))}\n      </div>\n      <UserProfile userId={userId} />\n    </div>\n  );\n}\n"
+        },
+        {
+          "path": "src/components/UserProfile.tsx",
+          "content": "import { useState, useEffect } from 'react';\n\ntype User = {\n  id: number;\n  name: string;\n  username: string;\n  email: string;\n  phone: string;\n  website: string;\n  company: { name: string };\n  address: { city: string };\n};\n\ntype Post = { id: number; title: string; body: string };\n\n// TODO: Build UserProfile that:\n//   1. Fetches user data from: https://jsonplaceholder.typicode.com/users/${userId}\n//   2. Fetches their posts from: https://jsonplaceholder.typicode.com/posts?userId=${userId}\n//   3. Shows loading state while fetching\n//   4. Shows error state if fetch fails\n//   5. CRITICAL: Use AbortController to cancel the fetch when userId changes\n//      (prevents race conditions when clicking between users quickly)\n//   6. Use Promise.all to fetch both in parallel\n\nexport default function UserProfile({ userId }: { userId: number }) {\n  // TODO: state for user, posts, loading, error\n\n  // TODO: useEffect with AbortController\n\n  return (\n    <div>\n      {/* Loading, error, and success states */}\n    </div>\n  );\n}\n"
+        }
       ]
     },
     {
@@ -184,6 +442,28 @@
       "outcomes": [
         "Handle loading, empty, success, and error states explicitly in async UIs",
         "Write predictable UIs for users even when the network fails"
+      ],
+      "starterFiles": [
+        {
+          "path": "src/App.tsx",
+          "content": "// Lesson 22: Explicit UI States\n// Every async UI has 4 states: loading, empty, error, success.\n// Handle all 4 explicitly — never leave users in the dark.\n\nimport PostsFeed from './components/PostsFeed';\n\nexport default function App() {\n  return (\n    <div style={{ maxWidth: 600, margin: '0 auto', padding: 24, fontFamily: 'sans-serif' }}>\n      <h1>Posts Feed</h1>\n      <PostsFeed />\n    </div>\n  );\n}\n"
+        },
+        {
+          "path": "src/components/PostsFeed.tsx",
+          "content": "import { useState } from 'react';\nimport { Spinner } from './ui/Spinner';\nimport { EmptyState } from './ui/EmptyState';\nimport { ErrorState } from './ui/ErrorState';\n\ntype Post = { id: number; title: string; body: string; userId: number };\n\ntype AsyncState<T> =\n  | { status: 'idle' }\n  | { status: 'loading' }\n  | { status: 'success'; data: T }\n  | { status: 'error'; error: Error };\n\n// TODO: Build PostsFeed with explicit state machine.\n// Use the AsyncState discriminated union above instead of separate booleans.\n// Fetch from: https://jsonplaceholder.typicode.com/posts?_limit=10\n// Buttons to test: \"Load Posts\", \"Simulate Error\", \"Clear\"\n//\n// Render:\n//   - idle: Show \"Click Load Posts to get started\"\n//   - loading: Show <Spinner />\n//   - error: Show <ErrorState error={...} onRetry={...} />\n//   - success with data: Show post cards\n//   - success with empty array: Show <EmptyState />\n\nexport default function PostsFeed() {\n  const [state, setState] = useState<AsyncState<Post[]>>({ status: 'idle' });\n\n  return (\n    <div>\n      {/* Controls */}\n      {/* State-based rendering */}\n    </div>\n  );\n}\n"
+        },
+        {
+          "path": "src/components/ui/Spinner.tsx",
+          "content": "// TODO: A simple loading spinner component.\n// Can be as simple as an animated CSS circle.\nexport function Spinner() {\n  return (\n    <div style={{ textAlign: 'center', padding: 40 }}>\n      ⏳ Loading...\n    </div>\n  );\n}\n"
+        },
+        {
+          "path": "src/components/ui/EmptyState.tsx",
+          "content": "// TODO: An empty state component.\n// Shows a friendly message when there's no data.\nexport function EmptyState() {\n  return (\n    <div style={{ textAlign: 'center', padding: 40, color: '#888' }}>\n      <p style={{ fontSize: 32 }}>📭</p>\n      <p>No posts found.</p>\n    </div>\n  );\n}\n"
+        },
+        {
+          "path": "src/components/ui/ErrorState.tsx",
+          "content": "// TODO: An error state component.\n// Shows the error message and a retry button.\nexport function ErrorState({ error, onRetry }: { error: Error; onRetry: () => void }) {\n  return (\n    <div style={{ textAlign: 'center', padding: 40, color: '#e53e3e' }}>\n      <p style={{ fontSize: 32 }}>⚠️</p>\n      <p>{error.message}</p>\n      <button onClick={onRetry} style={{ marginTop: 8 }}>Try Again</button>\n    </div>\n  );\n}\n"
+        }
       ]
     },
     {
@@ -192,6 +472,16 @@
       "outcomes": [
         "Decompose a chat UI into a clean component tree",
         "Design typed data shapes for users, conversations, and messages on the frontend"
+      ],
+      "starterFiles": [
+        {
+          "path": "src/types/chat.ts",
+          "content": "// Lesson 23: Design the data shapes for our Chat MVP.\n// These types will drive the entire app architecture.\n\n// TODO: Define these types:\n\n// User — the person sending/receiving messages\nexport type User = {\n  // id, name, avatarUrl, isOnline\n};\n\n// Message — a single chat message\nexport type Message = {\n  // id, content, senderId, timestamp, status ('sending' | 'sent' | 'failed')\n};\n\n// Conversation — a thread between participants\nexport type Conversation = {\n  // id, participants (User[]), messages (Message[]), lastMessage, unreadCount\n};\n\n// Think about: what does the component tree look like for a chat app?\n// Sketch it in comments below:\n//\n// App\n//   ChatLayout\n//     ConversationList (left panel)\n//       ConversationItem\n//     ChatPane (right panel)\n//       ChatHeader\n//       MessageList\n//         MessageBubble\n//       MessageComposer\n"
+        },
+        {
+          "path": "src/App.tsx",
+          "content": "// For this lesson, just discuss the design.\n// Next lessons will implement the components.\n\nimport type { User, Message, Conversation } from './types/chat';\n\n// TODO: Create some mock data to visualize the shape:\nconst mockUser: User = {\n  // Fill this in based on your type\n};\n\nconst mockConversation: Conversation = {\n  // Fill this in based on your type\n};\n\nexport default function App() {\n  return (\n    <div style={{ padding: 24, fontFamily: 'sans-serif' }}>\n      <h1>Chat App - Design Phase</h1>\n      <pre style={{ background: '#f5f5f5', padding: 16, borderRadius: 8 }}>\n        {JSON.stringify(mockConversation, null, 2)}\n      </pre>\n    </div>\n  );\n}\n"
+        }
       ]
     },
     {
@@ -200,6 +490,24 @@
       "outcomes": [
         "Implement an auto-scrolling message list with proper key handling",
         "Implement a message composer with controlled input and submit-on-Enter"
+      ],
+      "starterFiles": [
+        {
+          "path": "src/App.tsx",
+          "content": "import { useState } from 'react';\nimport MessageList from './components/MessageList';\nimport MessageComposer from './components/MessageComposer';\nimport type { Message } from './types/chat';\n\nconst CURRENT_USER_ID = 'user-1';\n\nconst initialMessages: Message[] = [\n  { id: '1', content: 'Hey! How are you?', senderId: 'user-2', timestamp: new Date(Date.now() - 60000), status: 'sent' },\n  { id: '2', content: 'I\\'m good! Working on the chat app.', senderId: 'user-1', timestamp: new Date(Date.now() - 30000), status: 'sent' },\n  { id: '3', content: 'Nice! How\\'s it going?', senderId: 'user-2', timestamp: new Date(), status: 'sent' },\n];\n\nexport default function App() {\n  const [messages, setMessages] = useState<Message[]>(initialMessages);\n\n  const handleSend = (content: string) => {\n    const newMessage: Message = {\n      id: Date.now().toString(),\n      content,\n      senderId: CURRENT_USER_ID,\n      timestamp: new Date(),\n      status: 'sent',\n    };\n    setMessages(prev => [...prev, newMessage]);\n  };\n\n  return (\n    <div style={{\n      height: '100vh', display: 'flex', flexDirection: 'column',\n      maxWidth: 600, margin: '0 auto', fontFamily: 'sans-serif',\n      border: '1px solid #ddd',\n    }}>\n      <header style={{ padding: '16px 20px', borderBottom: '1px solid #ddd', fontWeight: 600 }}>\n        Chat\n      </header>\n      <MessageList messages={messages} currentUserId={CURRENT_USER_ID} />\n      <MessageComposer onSend={handleSend} />\n    </div>\n  );\n}\n"
+        },
+        {
+          "path": "src/types/chat.ts",
+          "content": "export type Message = {\n  id: string;\n  content: string;\n  senderId: string;\n  timestamp: Date;\n  status: 'sending' | 'sent' | 'failed';\n};\n"
+        },
+        {
+          "path": "src/components/MessageList.tsx",
+          "content": "import { useEffect, useRef } from 'react';\nimport type { Message } from '../types/chat';\n\n// TODO: Build MessageList that:\n//   - Renders all messages\n//   - Own messages (currentUserId === senderId) appear on the RIGHT\n//   - Other messages appear on the LEFT\n//   - Auto-scrolls to bottom when new messages arrive (useEffect + scrollIntoView)\n//   - Formats timestamp as relative time (\"2 min ago\") or HH:MM\n//   - Each message has a unique key\n\nexport default function MessageList({ messages, currentUserId }: {\n  messages: Message[];\n  currentUserId: string;\n}) {\n  const bottomRef = useRef<HTMLDivElement>(null);\n\n  // TODO: Auto-scroll effect\n\n  return (\n    <div style={{ flex: 1, overflowY: 'auto', padding: 16, display: 'flex', flexDirection: 'column', gap: 8 }}>\n      {messages.map(msg => (\n        // TODO: MessageBubble\n        <div key={msg.id}>{msg.content}</div>\n      ))}\n      <div ref={bottomRef} />\n    </div>\n  );\n}\n"
+        },
+        {
+          "path": "src/components/MessageComposer.tsx",
+          "content": "import { useState } from 'react';\n\n// TODO: Build MessageComposer that:\n//   - Has a textarea for typing\n//   - Sends on Enter (but NOT Shift+Enter — that should add a newline)\n//   - Has a Send button (disabled when empty or whitespace-only)\n//   - Clears the input after sending\n//   - Auto-expands textarea height as user types (optional stretch goal)\n\nexport default function MessageComposer({ onSend }: { onSend: (text: string) => void }) {\n  const [text, setText] = useState('');\n\n  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {\n    if (e.key === 'Enter' && !e.shiftKey) {\n      e.preventDefault();\n      // TODO: submit\n    }\n  };\n\n  return (\n    <div style={{ borderTop: '1px solid #ddd', padding: 12, display: 'flex', gap: 8, alignItems: 'flex-end' }}>\n      <textarea\n        value={text}\n        onChange={e => setText(e.target.value)}\n        onKeyDown={handleKeyDown}\n        placeholder=\"Type a message... (Enter to send)\"\n        rows={1}\n        style={{ flex: 1, resize: 'none', border: '1px solid #ddd', borderRadius: 20, padding: '8px 14px', fontFamily: 'inherit', fontSize: 14 }}\n      />\n      <button\n        onClick={() => { /* TODO */ }}\n        disabled={!text.trim()}\n        style={{ padding: '8px 16px', background: '#0070f3', color: 'white', border: 'none', borderRadius: 20, cursor: 'pointer', opacity: text.trim() ? 1 : 0.5 }}\n      >\n        Send\n      </button>\n    </div>\n  );\n}\n"
+        }
       ]
     },
     {
@@ -208,6 +516,24 @@
       "outcomes": [
         "Apply optimistic updates for fast-feeling UIs",
         "Handle rollback when the server rejects an optimistic action"
+      ],
+      "starterFiles": [
+        {
+          "path": "src/App.tsx",
+          "content": "// Lesson 25: Optimistic Updates\n// Show the result immediately (assume success), then handle failures.\n// This makes the UI feel instant even with network latency.\n\nimport { useState } from 'react';\nimport MessageList from './components/MessageList';\nimport MessageComposer from './components/MessageComposer';\nimport type { Message } from './types/chat';\n\n// Simulate an API that sometimes fails:\nasync function sendMessageToAPI(content: string): Promise<{ id: string }> {\n  await new Promise(r => setTimeout(r, 800)); // Simulate 800ms latency\n  if (Math.random() < 0.3) throw new Error('Network error'); // 30% failure rate\n  return { id: `server-${Date.now()}` };\n}\n\nconst CURRENT_USER_ID = 'user-1';\n\nexport default function App() {\n  const [messages, setMessages] = useState<Message[]>([\n    { id: '1', content: 'Try sending a message! (30% chance of failure)', senderId: 'user-2', timestamp: new Date(), status: 'sent' }\n  ]);\n\n  const handleSend = async (content: string) => {\n    // TODO: Implement optimistic update pattern:\n    // 1. Create a temp message with status: 'sending' and a temp ID\n    // 2. Add it to state immediately (optimistic)\n    // 3. Call sendMessageToAPI(content)\n    // 4. On success: replace temp message with server ID, status: 'sent'\n    // 5. On failure: update status to 'failed' (show retry button)\n  };\n\n  return (\n    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', maxWidth: 600, margin: '0 auto', fontFamily: 'sans-serif', border: '1px solid #ddd' }}>\n      <header style={{ padding: '16px 20px', borderBottom: '1px solid #ddd', fontWeight: 600 }}>Chat (Optimistic Updates)</header>\n      <MessageList messages={messages} currentUserId={CURRENT_USER_ID} onRetry={handleSend} />\n      <MessageComposer onSend={handleSend} />\n    </div>\n  );\n}\n"
+        },
+        {
+          "path": "src/types/chat.ts",
+          "content": "export type Message = {\n  id: string;\n  content: string;\n  senderId: string;\n  timestamp: Date;\n  status: 'sending' | 'sent' | 'failed';\n};\n"
+        },
+        {
+          "path": "src/components/MessageList.tsx",
+          "content": "import { useEffect, useRef } from 'react';\nimport type { Message } from '../types/chat';\n\n// TODO: Update MessageList to show status indicators:\n//   - 'sending': show a spinner or clock icon\n//   - 'sent': show a checkmark\n//   - 'failed': show an error icon + \"Retry\" button that calls onRetry(content)\n\nexport default function MessageList({\n  messages,\n  currentUserId,\n  onRetry,\n}: {\n  messages: Message[];\n  currentUserId: string;\n  onRetry: (content: string) => void;\n}) {\n  const bottomRef = useRef<HTMLDivElement>(null);\n\n  useEffect(() => {\n    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });\n  }, [messages]);\n\n  return (\n    <div style={{ flex: 1, overflowY: 'auto', padding: 16, display: 'flex', flexDirection: 'column', gap: 8 }}>\n      {messages.map(msg => (\n        <MessageBubble key={msg.id} message={msg} isOwn={msg.senderId === currentUserId} onRetry={onRetry} />\n      ))}\n      <div ref={bottomRef} />\n    </div>\n  );\n}\n\nfunction MessageBubble({ message, isOwn, onRetry }: { message: Message; isOwn: boolean; onRetry: (content: string) => void }) {\n  return (\n    <div style={{ display: 'flex', justifyContent: isOwn ? 'flex-end' : 'flex-start' }}>\n      <div style={{\n        maxWidth: '70%', padding: '8px 14px', borderRadius: 18,\n        background: isOwn ? '#0070f3' : '#f0f0f0',\n        color: isOwn ? 'white' : 'black',\n        opacity: message.status === 'sending' ? 0.7 : 1,\n      }}>\n        <p style={{ margin: 0 }}>{message.content}</p>\n        {/* TODO: Add status indicator */}\n      </div>\n    </div>\n  );\n}\n"
+        },
+        {
+          "path": "src/components/MessageComposer.tsx",
+          "content": "import { useState } from 'react';\n\nexport default function MessageComposer({ onSend }: { onSend: (text: string) => void }) {\n  const [text, setText] = useState('');\n\n  const handleSend = () => {\n    if (!text.trim()) return;\n    onSend(text.trim());\n    setText('');\n  };\n\n  return (\n    <div style={{ borderTop: '1px solid #ddd', padding: 12, display: 'flex', gap: 8 }}>\n      <input\n        value={text}\n        onChange={e => setText(e.target.value)}\n        onKeyDown={e => { if (e.key === 'Enter') handleSend(); }}\n        placeholder=\"Type a message...\"\n        style={{ flex: 1, border: '1px solid #ddd', borderRadius: 20, padding: '8px 14px' }}\n      />\n      <button onClick={handleSend} disabled={!text.trim()} style={{ padding: '8px 16px', background: '#0070f3', color: 'white', border: 'none', borderRadius: 20 }}>\n        Send\n      </button>\n    </div>\n  );\n}\n"
+        }
       ]
     },
     {
@@ -216,6 +542,20 @@
       "outcomes": [
         "Build a mocked REST API on the frontend that matches the real backend contract",
         "Design the contract first so frontend and backend can develop in parallel"
+      ],
+      "starterFiles": [
+        {
+          "path": "src/api/contract.ts",
+          "content": "// API Contract — defines the shapes that frontend and backend agree on.\n// The mock implements this; the real backend will too.\n\nexport type SendMessageRequest = {\n  conversationId: string;\n  content: string;\n  senderId: string;\n};\n\nexport type SendMessageResponse = {\n  id: string;\n  content: string;\n  senderId: string;\n  timestamp: string; // ISO date string\n  status: 'sent';\n};\n\nexport type GetMessagesResponse = {\n  messages: SendMessageResponse[];\n  conversationId: string;\n};\n\n// The API surface:\nexport type ChatAPI = {\n  getMessages: (conversationId: string) => Promise<GetMessagesResponse>;\n  sendMessage: (req: SendMessageRequest) => Promise<SendMessageResponse>;\n};\n"
+        },
+        {
+          "path": "src/api/mockApi.ts",
+          "content": "import type { ChatAPI, SendMessageRequest, SendMessageResponse, GetMessagesResponse } from './contract';\n\n// TODO: Implement a mock that satisfies the ChatAPI contract.\n// The mock should:\n//   - Store messages in memory (a Map or array)\n//   - Add artificial delay (200-500ms) to simulate network\n//   - Occasionally fail (10% rate) to test error handling\n//   - Generate realistic IDs (Date.now().toString() is fine)\n\nconst mockMessages: SendMessageResponse[] = [\n  { id: '1', content: 'Welcome to the chat!', senderId: 'system', timestamp: new Date().toISOString(), status: 'sent' },\n];\n\nexport const mockApi: ChatAPI = {\n  async getMessages(conversationId: string): Promise<GetMessagesResponse> {\n    // TODO: simulate delay, return messages\n    return { messages: mockMessages, conversationId };\n  },\n\n  async sendMessage(req: SendMessageRequest): Promise<SendMessageResponse> {\n    // TODO: simulate delay, possibly fail, create and store message\n    throw new Error('Not implemented');\n  },\n};\n"
+        },
+        {
+          "path": "src/App.tsx",
+          "content": "// Wire up the mock API to the Chat UI\nimport { useState, useEffect } from 'react';\nimport { mockApi } from './api/mockApi';\nimport type { SendMessageResponse } from './api/contract';\n\nexport default function App() {\n  const [messages, setMessages] = useState<SendMessageResponse[]>([]);\n  const [loading, setLoading] = useState(true);\n  const [error, setError] = useState<string | null>(null);\n  const [input, setInput] = useState('');\n\n  const CONVERSATION_ID = 'conv-1';\n  const CURRENT_USER_ID = 'user-1';\n\n  useEffect(() => {\n    mockApi.getMessages(CONVERSATION_ID)\n      .then(res => { setMessages(res.messages); setLoading(false); })\n      .catch(e => { setError(e.message); setLoading(false); });\n  }, []);\n\n  const handleSend = async () => {\n    if (!input.trim()) return;\n    const content = input.trim();\n    setInput('');\n    try {\n      const msg = await mockApi.sendMessage({ conversationId: CONVERSATION_ID, content, senderId: CURRENT_USER_ID });\n      setMessages(prev => [...prev, msg]);\n    } catch (e: unknown) {\n      if (e instanceof Error) setError(e.message);\n    }\n  };\n\n  return (\n    <div style={{ maxWidth: 500, margin: '0 auto', padding: 24, fontFamily: 'sans-serif' }}>\n      <h1>Chat (Mocked API)</h1>\n      {loading && <p>Loading...</p>}\n      {error && <p style={{ color: 'red' }}>{error} <button onClick={() => setError(null)}>Dismiss</button></p>}\n      <div style={{ height: 300, overflowY: 'auto', border: '1px solid #ddd', borderRadius: 8, padding: 12, marginBottom: 12 }}>\n        {messages.map(m => (\n          <div key={m.id} style={{ textAlign: m.senderId === CURRENT_USER_ID ? 'right' : 'left', marginBottom: 8 }}>\n            <span style={{ background: m.senderId === CURRENT_USER_ID ? '#0070f3' : '#f0f0f0', color: m.senderId === CURRENT_USER_ID ? 'white' : 'black', borderRadius: 12, padding: '6px 12px', display: 'inline-block' }}>\n              {m.content}\n            </span>\n          </div>\n        ))}\n      </div>\n      <div style={{ display: 'flex', gap: 8 }}>\n        <input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSend()} style={{ flex: 1, padding: 8, border: '1px solid #ddd', borderRadius: 6 }} placeholder=\"Type a message...\" />\n        <button onClick={handleSend} style={{ padding: '8px 16px', background: '#0070f3', color: 'white', border: 'none', borderRadius: 6 }}>Send</button>\n      </div>\n    </div>\n  );\n}\n"
+        }
       ]
     },
     {
@@ -224,6 +564,20 @@
       "outcomes": [
         "Explain the testing pyramid and what is worth testing on the frontend",
         "Set up Vitest + React Testing Library in a Vite project"
+      ],
+      "starterFiles": [
+        {
+          "path": "src/utils/format.ts",
+          "content": "// Simple utility functions — easy to start testing with.\n\nexport function formatPrice(cents: number): string {\n  return `$${(cents / 100).toFixed(2)}`;\n}\n\nexport function truncate(text: string, maxLength: number): string {\n  if (text.length <= maxLength) return text;\n  return text.slice(0, maxLength - 3) + '...';\n}\n\nexport function capitalize(text: string): string {\n  if (!text) return '';\n  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();\n}\n\nexport function pluralize(count: number, singular: string, plural?: string): string {\n  return count === 1 ? `${count} ${singular}` : `${count} ${plural ?? singular + 's'}`;\n}\n"
+        },
+        {
+          "path": "src/utils/format.test.ts",
+          "content": "import { describe, it, expect } from 'vitest';\nimport { formatPrice, truncate, capitalize, pluralize } from './format';\n\n// Run with: npx vitest\n\ndescribe('formatPrice', () => {\n  it('formats cents as dollars with 2 decimal places', () => {\n    expect(formatPrice(1000)).toBe('$10.00');\n  });\n\n  it('handles zero', () => {\n    expect(formatPrice(0)).toBe('$0.00');\n  });\n\n  // TODO: Add more test cases. What about odd numbers? Large amounts?\n});\n\ndescribe('truncate', () => {\n  // TODO: Write tests for truncate\n  // Cases to cover:\n  //   - text shorter than maxLength (no truncation)\n  //   - text exactly maxLength (no truncation)\n  //   - text longer than maxLength (truncate with ...)\n  //   - edge case: maxLength < 3\n});\n\ndescribe('capitalize', () => {\n  // TODO: Write tests\n});\n\ndescribe('pluralize', () => {\n  // TODO: Write tests\n  // Don't forget: 0 items, 1 item, 2 items, custom plural form\n});\n"
+        },
+        {
+          "path": "setup-notes.md",
+          "content": "# Setting Up Vitest + React Testing Library\n\n## Install:\n```bash\nnpm install -D vitest @testing-library/react @testing-library/user-event @testing-library/jest-dom jsdom\n```\n\n## vite.config.ts additions:\n```ts\nimport { defineConfig } from 'vite';\nimport react from '@vitejs/plugin-react';\n\nexport default defineConfig({\n  plugins: [react()],\n  test: {\n    globals: true,\n    environment: 'jsdom',\n    setupFiles: ['./src/test/setup.ts'],\n  },\n});\n```\n\n## src/test/setup.ts:\n```ts\nimport '@testing-library/jest-dom';\n```\n\n## Run tests:\n```bash\nnpx vitest          # watch mode\nnpx vitest run      # single run\nnpx vitest --ui     # browser UI\n```\n\n## The Testing Pyramid:\n- Unit tests (most): Test pure functions, custom hooks in isolation\n- Integration tests (some): Test component behavior as users would interact\n- E2E tests (fewest): Full browser automation, slow and expensive\n"
+        }
       ]
     },
     {
@@ -232,6 +586,24 @@
       "outcomes": [
         "Write tests that interact with components from the user's perspective",
         "Test a custom hook in isolation"
+      ],
+      "starterFiles": [
+        {
+          "path": "src/components/Counter.tsx",
+          "content": "import { useState } from 'react';\n\nexport default function Counter({ initialCount = 0, step = 1 }: { initialCount?: number; step?: number }) {\n  const [count, setCount] = useState(initialCount);\n\n  return (\n    <div>\n      <p data-testid=\"count\">Count: {count}</p>\n      <button onClick={() => setCount(c => c + step)}>Increment</button>\n      <button onClick={() => setCount(c => Math.max(0, c - step))}>Decrement</button>\n      <button onClick={() => setCount(initialCount)}>Reset</button>\n    </div>\n  );\n}\n"
+        },
+        {
+          "path": "src/components/Counter.test.tsx",
+          "content": "import { render, screen } from '@testing-library/react';\nimport userEvent from '@testing-library/user-event';\nimport { describe, it, expect } from 'vitest';\nimport Counter from './Counter';\n\ndescribe('Counter', () => {\n  it('renders with initial count of 0', () => {\n    render(<Counter />);\n    expect(screen.getByTestId('count')).toHaveTextContent('Count: 0');\n  });\n\n  it('increments the count when Increment is clicked', async () => {\n    const user = userEvent.setup();\n    render(<Counter />);\n    await user.click(screen.getByText('Increment'));\n    expect(screen.getByTestId('count')).toHaveTextContent('Count: 1');\n  });\n\n  // TODO: Add tests for:\n  //   - initialCount prop\n  //   - step prop\n  //   - decrement button\n  //   - count never goes below 0\n  //   - reset button\n  //   - multiple clicks\n});\n"
+        },
+        {
+          "path": "src/hooks/useCounter.ts",
+          "content": "import { useState } from 'react';\n\n// Extract Counter logic into a custom hook:\nexport function useCounter(initialCount = 0, step = 1) {\n  const [count, setCount] = useState(initialCount);\n\n  return {\n    count,\n    increment: () => setCount(c => c + step),\n    decrement: () => setCount(c => Math.max(0, c - step)),\n    reset: () => setCount(initialCount),\n  };\n}\n"
+        },
+        {
+          "path": "src/hooks/useCounter.test.ts",
+          "content": "import { renderHook, act } from '@testing-library/react';\nimport { describe, it, expect } from 'vitest';\nimport { useCounter } from './useCounter';\n\ndescribe('useCounter', () => {\n  it('initializes with 0 by default', () => {\n    const { result } = renderHook(() => useCounter());\n    expect(result.current.count).toBe(0);\n  });\n\n  it('increments by 1 by default', () => {\n    const { result } = renderHook(() => useCounter());\n    act(() => result.current.increment());\n    expect(result.current.count).toBe(1);\n  });\n\n  // TODO: Add tests for:\n  //   - custom initialCount\n  //   - custom step\n  //   - decrement\n  //   - count floor at 0\n  //   - reset\n});\n"
+        }
       ]
     },
     {
@@ -240,6 +612,16 @@
       "outcomes": [
         "Review code critically against Clean Code principles",
         "Apply targeted refactors that improve readability and maintainability without changing behavior"
+      ],
+      "starterFiles": [
+        {
+          "path": "src/App.tsx",
+          "content": "// Lesson 29: Clean Code Review\n// Look at your Chat MVP from previous lessons.\n// Apply a systematic refactoring pass.\n//\n// Checklist:\n// □ Are components doing one thing?\n// □ Are hooks extractable? (logic tangled with JSX?)\n// □ Any `any` types remaining?\n// □ Are prop types clearly named and documented?\n// □ Are effects cleaned up?\n// □ Are handlers using useCallback where it matters?\n// □ Is error handling consistent?\n// □ Are there any obvious performance issues?\n// □ Is the folder structure logical?\n//\n// For each item you fix, add a comment explaining WHAT you changed and WHY.\n// Your tutor will review the diff.\n\n// Import your existing App from previous lessons and refactor it here.\nexport default function App() {\n  return <div>Paste your Chat MVP here and start the refactoring pass!</div>;\n}\n"
+        },
+        {
+          "path": "REVIEW_NOTES.md",
+          "content": "# Chat MVP Code Review Notes\n\n## What I found:\n\n(Write your code smells here before fixing them)\n\n## Changes made:\n\n(Document each refactor: what changed, why it's better)\n\n## What I learned:\n\n(Key takeaways from this code review exercise)\n"
+        }
       ]
     },
     {
@@ -249,6 +631,20 @@
         "Ship a Frontend Chat MVP using React + Vite + TypeScript against a mocked API contract",
         "Demonstrate clean component architecture, explicit loading/error/empty states, and at least one custom hook",
         "Deliver the project as a GitHub PR with passing tests and TypeScript compilation"
+      ],
+      "starterFiles": [
+        {
+          "path": "src/App.tsx",
+          "content": "// Final Project: Frontend Chat MVP\n//\n// Requirements:\n// ✅ ConversationList (left panel) — list of conversations\n// ✅ ChatPane (right panel) — messages + composer for selected conversation\n// ✅ Real-time message display with proper loading/empty/error states\n// ✅ Optimistic message sending\n// ✅ Mock API (implements the contract from lesson 26)\n// ✅ At least one custom hook (useChatMessages, useConversations, etc.)\n// ✅ Clean TypeScript — no `any`\n// ✅ At least 3 component tests\n//\n// This is your capstone. Build something you're proud of!\n\nexport default function App() {\n  return (\n    <div style={{ height: '100vh', display: 'flex', fontFamily: 'sans-serif' }}>\n      {/* ConversationList goes here */}\n      {/* ChatPane goes here */}\n      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888' }}>\n        Build your Chat MVP here. Good luck! 🚀\n      </div>\n    </div>\n  );\n}\n"
+        },
+        {
+          "path": "README.md",
+          "content": "# Frontend Chat MVP\n\n## What I built\n\n[Describe your app here]\n\n## Architecture decisions\n\n[Explain your component structure, state management choices, etc.]\n\n## How to run\n\n```bash\nnpm install\nnpm run dev\n```\n\n## How to run tests\n\n```bash\nnpx vitest run\n```\n\n## What I'd add with more time\n\n[Future improvements]\n"
+        },
+        {
+          "path": "src/api/contract.ts",
+          "content": "// Copy your API contract from lesson 26 here\nexport type Message = {\n  id: string;\n  content: string;\n  senderId: string;\n  timestamp: string;\n  status: 'sent';\n};\n\nexport type Conversation = {\n  id: string;\n  name: string;\n  participants: string[];\n  lastMessage?: Message;\n  unreadCount: number;\n};\n\nexport type ChatAPI = {\n  getConversations: () => Promise<Conversation[]>;\n  getMessages: (conversationId: string) => Promise<Message[]>;\n  sendMessage: (conversationId: string, content: string, senderId: string) => Promise<Message>;\n};\n"
+        }
       ]
     }
   ]

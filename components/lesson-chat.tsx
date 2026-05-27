@@ -10,6 +10,7 @@ import {
   ArrowRight,
   BookOpen,
   CheckCircle2,
+  Code2,
   Sparkles,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -35,6 +36,8 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { Course, Lesson } from "@/lib/syllabus";
 
+import type { Project } from "@/lib/virtual-fs";
+
 type CompleteLessonOutput = {
   ok: boolean;
   lessonId?: string;
@@ -42,6 +45,13 @@ type CompleteLessonOutput = {
   courseId?: string;
   reason?: string;
   error?: string;
+};
+
+type FileToolOutput = {
+  ok: boolean;
+  path: string;
+  content: string;
+  reason: string;
 };
 
 function findCompletionPart(messages: UIMessage[]): {
@@ -70,29 +80,53 @@ function findCompletionPart(messages: UIMessage[]): {
 type LessonChatProps = {
   course: Course;
   lesson: Lesson;
+  /** Ref to the current project — used in transport body without causing re-memoization */
+  projectRef: React.RefObject<Project>;
+  /** Whether the Monaco editor panel is currently visible */
+  showEditor: boolean;
+  /** Toggle the Monaco editor panel open/closed */
+  onToggleEditor: () => void;
   isAlreadyCompleted: boolean;
   onLessonCompleted: (lessonId: string) => Promise<string | null>;
   onAdvance: (lessonId: string) => void;
+  onFileCreated: (path: string, content: string) => void;
+  onFileUpdated: (path: string, content: string) => void;
 };
 
 export function LessonChat({
   course,
   lesson,
+  projectRef,
+  showEditor,
+  onToggleEditor,
   isAlreadyCompleted,
   onLessonCompleted,
   onAdvance,
+  onFileCreated,
+  onFileUpdated,
 }: LessonChatProps) {
   const [input, setInput] = useState("");
   const [nextLessonId, setNextLessonId] = useState<string | null>(null);
   const handledCompletionRef = useRef<string | null>(null);
+  const handledFileToolsRef = useRef<Set<string>>(new Set());
 
+  // ── Transport: include project files on every send ───────────────────────
+  // prepareSendMessagesRequest is called right before each fetch, so it
+  // reads the latest projectRef.current without needing to re-memoize.
   const transport = useMemo(
     () =>
       new DefaultChatTransport({
         api: "/api/chat",
         body: { courseId: course.id, lessonId: lesson.id },
+        prepareSendMessagesRequest: ({ body }) => ({
+          body: {
+            ...body,
+            projectFiles: projectRef.current?.files ?? [],
+            activeFilePath: projectRef.current?.activeFilePath,
+          },
+        }),
       }),
-    [course.id, lesson.id]
+    [course.id, lesson.id, projectRef]
   );
 
   const { messages, sendMessage, status, error, stop } = useChat({
@@ -103,6 +137,7 @@ export function LessonChat({
   const isComplete = isAlreadyCompleted || completion !== null;
   const isStreaming = status === "submitted" || status === "streaming";
 
+  // ── Handle complete_lesson tool ──────────────────────────────────────────
   useEffect(() => {
     if (!completion) return;
     const key = completion.toolCallId;
@@ -112,6 +147,33 @@ export function LessonChat({
       setNextLessonId(next);
     });
   }, [completion, lesson.id, onLessonCompleted]);
+
+  // ── Handle create_file and update_file tools ─────────────────────────────
+  useEffect(() => {
+    for (const msg of messages) {
+      if (msg.role !== "assistant") continue;
+      for (const part of msg.parts) {
+        const p = part as ToolUIPart;
+        if (p.state !== "output-available") continue;
+
+        if (p.type === "tool-create_file" && !handledFileToolsRef.current.has(p.toolCallId)) {
+          const out = p.output as FileToolOutput;
+          if (out?.ok) {
+            handledFileToolsRef.current.add(p.toolCallId);
+            onFileCreated(out.path, out.content);
+          }
+        }
+
+        if (p.type === "tool-update_file" && !handledFileToolsRef.current.has(p.toolCallId)) {
+          const out = p.output as FileToolOutput;
+          if (out?.ok) {
+            handledFileToolsRef.current.add(p.toolCallId);
+            onFileUpdated(out.path, out.content);
+          }
+        }
+      }
+    }
+  }, [messages, onFileCreated, onFileUpdated]);
 
   const handleSubmit = useCallback(
     (msg: PromptInputMessage) => {
@@ -138,7 +200,12 @@ export function LessonChat({
 
   return (
     <div className="flex h-full min-h-0 flex-1 flex-col">
-      <LessonHeader course={course} lesson={lesson} />
+      <LessonHeader
+        course={course}
+        lesson={lesson}
+        showEditor={showEditor}
+        onToggleEditor={onToggleEditor}
+      />
 
       <Conversation className="min-h-0 flex-1">
         <ConversationContent className="mx-auto w-full max-w-3xl gap-6 px-6 py-8">
@@ -220,15 +287,41 @@ export function LessonChat({
   );
 }
 
-function LessonHeader({ course, lesson }: { course: Course; lesson: Lesson }) {
+function LessonHeader({
+  course,
+  lesson,
+  showEditor,
+  onToggleEditor,
+}: {
+  course: Course;
+  lesson: Lesson;
+  showEditor: boolean;
+  onToggleEditor: () => void;
+}) {
   return (
-    <header className="border-b border-border bg-background/60 px-6 py-5 backdrop-blur supports-[backdrop-filter]:bg-background/40">
-      <div className="mx-auto flex w-full max-w-3xl flex-col gap-3">
-        <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-          <BookOpen className="size-3.5" />
-          <span className="uppercase tracking-wider">{course.title}</span>
+    <header className="border-b border-border bg-background/60 px-4 py-4 backdrop-blur supports-[backdrop-filter]:bg-background/40">
+      <div className="flex w-full flex-col gap-2">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
+            <BookOpen className="size-3.5" />
+            <span className="uppercase tracking-wider">{course.title}</span>
+          </div>
+          {/* Editor toggle button */}
+          <button
+            onClick={onToggleEditor}
+            title={showEditor ? "Close code editor" : "Open code editor"}
+            className={cn(
+              "flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-[11px] font-medium transition-colors",
+              showEditor
+                ? "border-brand/40 bg-brand/10 text-brand hover:bg-brand/20"
+                : "border-border bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
+            )}
+          >
+            <Code2 className="size-3" />
+            {showEditor ? "Close Editor" : "Open Editor"}
+          </button>
         </div>
-        <h2 className="text-xl font-semibold tracking-tight">{lesson.title}</h2>
+        <h2 className="text-base font-semibold tracking-tight">{lesson.title}</h2>
         <div className="flex flex-wrap gap-1.5">
           {lesson.outcomes.map((outcome, i) => (
             <Badge
@@ -277,6 +370,54 @@ function MessageView({ message }: { message: UIMessage }) {
               >
                 <Sparkles className="size-4 animate-pulse text-brand" />
                 Checking the mastery outcomes…
+              </div>
+            );
+          }
+          if (part.type === "tool-create_file") {
+            const toolPart = part as ToolUIPart;
+            if (toolPart.state === "output-available") {
+              const out = toolPart.output as { path?: string };
+              return (
+                <div
+                  key={i}
+                  className="flex items-center gap-2 rounded-lg border border-border bg-muted/40 px-3 py-2 text-xs text-muted-foreground"
+                >
+                  <Sparkles className="size-3.5 shrink-0 text-green-500" />
+                  <span>Created <code className="font-mono text-foreground">{out.path}</code></span>
+                </div>
+              );
+            }
+            return (
+              <div
+                key={i}
+                className="flex items-center gap-2 text-sm text-muted-foreground"
+              >
+                <Sparkles className="size-4 animate-pulse text-green-500" />
+                Creating file…
+              </div>
+            );
+          }
+          if (part.type === "tool-update_file") {
+            const toolPart = part as ToolUIPart;
+            if (toolPart.state === "output-available") {
+              const out = toolPart.output as { path?: string };
+              return (
+                <div
+                  key={i}
+                  className="flex items-center gap-2 rounded-lg border border-border bg-muted/40 px-3 py-2 text-xs text-muted-foreground"
+                >
+                  <Sparkles className="size-3.5 shrink-0 text-blue-500" />
+                  <span>Updated <code className="font-mono text-foreground">{out.path}</code></span>
+                </div>
+              );
+            }
+            return (
+              <div
+                key={i}
+                className="flex items-center gap-2 text-sm text-muted-foreground"
+              >
+                <Sparkles className="size-4 animate-pulse text-blue-500" />
+                Updating file…
               </div>
             );
           }

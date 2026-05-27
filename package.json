@@ -12,6 +12,7 @@
     "@ai-sdk/openai": "^3.0.65",
     "@ai-sdk/react": "^3.0.193",
     "@base-ui/react": "^1.5.0",
+    "@monaco-editor/react": "^4.7.0",
     "@streamdown/cjk": "^1.0.3",
     "@streamdown/code": "^1.1.1",
     "@streamdown/math": "^1.0.2",
